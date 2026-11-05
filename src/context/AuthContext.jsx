@@ -1,91 +1,114 @@
-import { createContext, useState, useContext, useEffect, useCallback } from "react";
-import apis from "@/api/index";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { user as userApi } from "@/lib/api";
+import { getToken, setUnauthorizedHandler } from "@/lib/http";
+import { TOKEN_KEY } from "@/constants";
 
-// 1. Create the AuthContext (Keep it internal to this file to satisfy Fast Refresh)
-const AuthContext = createContext();
+/**
+ * Who is signed in. The token lives in localStorage; on start-up the profile
+ * is loaded from the backend, which is the source of truth for the role (the
+ * backend never trusts the role inside the token either).
+ *
+ * status: "loading" (checking a saved token) | "guest" | "authenticated"
+ */
+const AuthContext = createContext(null);
 
-const initialStates = {
-  isAuthenticated: false,
-  user: null,
-  preferences: null,
-  token: null,
-  splashLoading: true,
+const storeToken = (token) => {
+  try {
+    if (token) localStorage.setItem(TOKEN_KEY, token);
+    else localStorage.removeItem(TOKEN_KEY);
+  } catch {
+    // private mode: the session lasts until the tab closes
+  }
 };
 
-// 2. Provide AuthContext to the app (Main component export)
 export const AuthProvider = ({ children }) => {
-  const [authState, setAuthState] = useState(initialStates);
+  const queryClient = useQueryClient();
+  const [state, setState] = useState(() => ({
+    status: getToken() ? "loading" : "guest",
+    user: null,
+    preferences: null,
+    token: getToken(),
+  }));
 
-  // Wrap fetchProfile in useCallback so it safe to include in dependency arrays
-  const fetchProfile = useCallback(async (token) => {
-    setAuthState((prev) => ({ ...prev, splashLoading: true }));
+  const signOut = useCallback(() => {
+    storeToken(null);
+    // Drop every cached response that belonged to this user.
+    queryClient.clear();
+    setState({ status: "guest", user: null, preferences: null, token: null });
+  }, [queryClient]);
+
+  const loadProfile = useCallback(async (token) => {
     try {
-      const { data } = await apis.fetchProfile();
-      if (data?.success) {
-        setAuthState((prev) => ({
-          ...prev,
-          token: token,
-          isAuthenticated: true,
-          user: data?.data?.user,
-          preferences: data?.data?.preferences,
-        }));
-      } else {
-        // Handle immediate logout cleanup
-        localStorage.removeItem("token");
-        setAuthState({ ...initialStates, splashLoading: false });
-      }
-    } catch (error) {
-      console.error("🚀 ~ fetchProfile ~ error:", error);
-      localStorage.removeItem("token");
-      setAuthState({ ...initialStates, splashLoading: false });
-    } finally {
-      setAuthState((prev) => ({ ...prev, splashLoading: false }));
+      const { user, preferences } = await userApi.profile();
+      setState({ status: "authenticated", user, preferences, token });
+      return user;
+    } catch {
+      storeToken(null);
+      setState({ status: "guest", user: null, preferences: null, token: null });
+      return null;
     }
   }, []);
 
-  // Silently re-pull user + preferences (e.g. after a profile edit) WITHOUT
-  // toggling splashLoading, so the app doesn't flash the splash screen.
+  /** Call with the token from login / social login / 2FA. Resolves to the user. */
+  const signIn = useCallback(
+    (token) => {
+      storeToken(token);
+      setState((prev) => ({ ...prev, status: "loading", token }));
+      return loadProfile(token);
+    },
+    [loadProfile],
+  );
+
+  /** Re-pull user + preferences after a profile edit, without a loading flash. */
   const refreshProfile = useCallback(async () => {
     try {
-      const { data } = await apis.fetchProfile();
-      if (data?.success) {
-        setAuthState((prev) => ({
-          ...prev,
-          user: data?.data?.user,
-          preferences: data?.data?.preferences,
-        }));
-      }
-    } catch (error) {
-      console.error("🚀 ~ refreshProfile ~ error:", error);
+      const { user, preferences } = await userApi.profile();
+      setState((prev) => ({ ...prev, user, preferences }));
+    } catch {
+      // keep the current data; a 401 signs out via the handler below
     }
   }, []);
 
-  const login = (token) => {
-    localStorage.setItem("token", token);
-    fetchProfile(token);
-  };
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    setAuthState({ ...initialStates, splashLoading: false });
-  };
-
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      fetchProfile(token);
-    } else {
-      setAuthState((prev) => ({ ...prev, splashLoading: false }));
-    }
-  }, [fetchProfile]); // Added fetchProfile here safely because of useCallback
+    const token = getToken();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time session restore
+    if (token) loadProfile(token);
+  }, [loadProfile]);
 
-  // Context value
-  const value = { ...authState, login, logout, refreshProfile };
+  // Any 401 from the API (expired token, password changed elsewhere, blocked
+  // mid-session) ends the session.
+  useEffect(() => {
+    setUnauthorizedHandler(signOut);
+    return () => setUnauthorizedHandler(() => {});
+  }, [signOut]);
+
+  const value = useMemo(
+    () => ({
+      ...state,
+      isAuthenticated: state.status === "authenticated",
+      isAdmin: state.user?.role === "admin",
+      signIn,
+      signOut,
+      refreshProfile,
+      // Old names, still used by screens not yet rebuilt (F2 removes them).
+      splashLoading: state.status === "loading",
+      login: signIn,
+      logout: signOut,
+    }),
+    [state, signIn, signOut, refreshProfile],
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-// 3. Custom Hook (Exported safely alongside the provider)
 // eslint-disable-next-line react-refresh/only-export-components
-export const useAuthContext = () => useContext(AuthContext);
+export const useAuth = () => {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used inside <AuthProvider>");
+  return ctx;
+};
+
+// Old hook name used by screens not yet rebuilt.
+// eslint-disable-next-line react-refresh/only-export-components
+export const useAuthContext = useAuth;

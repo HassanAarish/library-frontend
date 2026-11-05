@@ -15,25 +15,20 @@ export default defineConfig({
       registerType: "autoUpdate",
       workbox: {
         maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
+        // Never cache API calls or book pages offline.
+        navigateFallbackDenylist: [/^\/api/],
       },
       manifest: {
-        name: "Library Management System",
-        short_name: "Library",
+        name: "LibraryHub",
+        short_name: "LibraryHub",
+        description: "Rent and read books online.",
         start_url: "/",
         display: "standalone",
-        background_color: "#0b0b14",
-        theme_color: "#8b5cf6",
+        background_color: "#fbf8f3",
+        theme_color: "#1f5c4a",
         icons: [
-          {
-            src: "/icon-192x192.png",
-            sizes: "192x192",
-            type: "image/png",
-          },
-          {
-            src: "/icon-512x512.png",
-            sizes: "512x512",
-            type: "image/png",
-          },
+          { src: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
+          { src: "/icon-512x512.png", sizes: "512x512", type: "image/png" },
           {
             src: "/icon-512x512.png",
             sizes: "512x512",
@@ -47,31 +42,21 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      "@/api": path.resolve(__dirname, "./src/api"),
-      "@/assets": path.resolve(__dirname, "./src/assets"),
-      "@/components": path.resolve(__dirname, "./src/components"),
-      "@/constants": path.resolve(__dirname, "./src/constants"),
-      "@/context": path.resolve(__dirname, "./src/context"),
-      "@/hooks": path.resolve(__dirname, "./src/hooks"),
-      "@/layout": path.resolve(__dirname, "./src/layout"),
-      "@/pages": path.resolve(__dirname, "./src/pages"),
-      "@/utils": path.resolve(__dirname, "./src/utils"),
     },
-    build: {
-      rollupOptions: {
-        output: {
-          entryFileNames: `[name].[hash].js`,
-          chunkFileNames: `[name].[hash].js`,
-          assetFileNames: `[name].[hash].[ext]`,
-        },
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        entryFileNames: `[name].[hash].js`,
+        chunkFileNames: `[name].[hash].js`,
+        assetFileNames: `[name].[hash].[ext]`,
       },
-      brotliSize: true,
-      chunkSizeWarningLimit: 1500,
     },
-    server: {
-      headers: {
-        "Cache-Control": "no-cache",
-      },
+    chunkSizeWarningLimit: 1500,
+  },
+  server: {
+    headers: {
+      "Cache-Control": "no-cache",
     },
   },
 });

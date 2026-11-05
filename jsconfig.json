@@ -1,15 +1,9 @@
 {
   "compilerOptions": {
+    "jsx": "react-jsx",
     "paths": {
-      "@/api/*": ["./src/api/*"],
-      "@/assets/*": ["./src/assets/*"],
-      "@/components/*": ["./src/components/*"],
-      "@/constants/*": ["./src/constants/*"],
-      "@/context/*": ["./src/context/*"],
-      "@/hooks/*": ["./src/hooks/*"],
-      "@/layout/*": ["./src/layout/*"],
-      "@/pages/*": ["./src/pages/*"],
-      "@/utils/*": ["./src/utils/*"]
+      "@/*": ["./src/*"]
     }
-  }
+  },
+  "include": ["src"]
 }

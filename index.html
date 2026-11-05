@@ -1,19 +1,35 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/library.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0b0b14" />
-    <title>LibraryHub</title>
+    <meta name="theme-color" content="#fbf8f3" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#14110e" media="(prefers-color-scheme: dark)" />
+    <title>LibraryHub: rent and read books online</title>
     <meta
       name="description"
-      content=" Explore our diverse collection of books, articles, and resources tailored to your interests and needs."
+      content="Rent books online in Pakistan. Browse the catalogue, book a title for now or later, and read it in your browser."
     />
+    <!-- Apply the saved/system theme before first paint (no light→dark flash). -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem("theme");
+          var dark = saved
+            ? saved === "dark"
+            : window.matchMedia("(prefers-color-scheme: dark)").matches;
+          document.documentElement.dataset.theme = dark ? "dark" : "light";
+        } catch (e) {
+          document.documentElement.dataset.theme = "light";
+        }
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Fraunces (editorial serif) + Inter (UI). Outfit/Sora are for legacy screens only. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
   </head>

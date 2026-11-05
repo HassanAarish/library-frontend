@@ -1,42 +1,71 @@
 # 📚 LibraryHub — Frontend
 
-A modern, single-page **Library Management System** UI — a book-rental platform
-with two role-based portals (readers & admins), a complete authentication
-experience, and a custom **"Aurora Glass"** design system.
+The reader-facing website and admin console for **LibraryHub**, an online
+book-rental library launching in Pakistan. Visitors browse the catalogue; readers
+rent books (single rental or 3/5/10-book yearly plans), pay with Easypaisa and read
+in the browser; the admin runs the catalogue, payments and requests.
 
-This is the SPA half of a two-part app. The Express/MongoDB API lives in
-`../library-backend`.
+This is the SPA half of a two-part app. The Express/MongoDB API (REST + Socket.IO)
+lives in `../library-backend`; its README documents every endpoint and event.
+
+> **Status:** the frontend is being rebuilt in phases. **F0 (foundation) is done**:
+> design system, API layer, live updates, routing and layouts. Screens arrive in
+> F1 catalogue → F2 accounts → F3 renting & reader → F4 community & inbox →
+> F5 admin → F6 polish. Routes not built yet show a "coming soon" page naming
+> their phase.
 
 ---
 
-## 🧰 Tech Stack
+## 🧰 Tech stack
 
 | Area | Technology |
 |------|-----------|
 | Framework | **React 19** |
-| Build tool | **Vite 8** + **PWA** (`vite-plugin-pwa`, autoUpdate) |
-| Styling | **Tailwind CSS 4** (`@tailwindcss/vite`) — custom Aurora Glass theme |
-| Data fetching | **TanStack React Query** + **Axios** |
+| Build | **Vite 8** + PWA (`vite-plugin-pwa`) |
+| Styling | **Tailwind CSS 4**: "warm editorial" design system, light + dark |
+| Data | **TanStack React Query** + **Axios** |
+| Live updates | **socket.io-client** |
 | Routing | **react-router-dom 7** |
-| Forms & validation | **Formik** + **Yup** |
+| Forms | Formik + Yup |
 | Social login | `@react-oauth/google` + Facebook JS SDK |
-| Notifications | **react-toastify** |
-| Tooling | **ESLint 10** (flat config) + **Prettier** |
+| Toasts | react-toastify |
+| Tooling | ESLint 10 (flat config) + Prettier |
 
 ---
 
-## 🎨 Aurora Glass theme
+## 🎨 Design system ("warm editorial")
 
-A bespoke dark theme: a midnight base (`#0b0b14`) with **iridescent violet→cyan
-gradients**, **frosted-glass surfaces**, soft glows, and an animated aurora
-background.
+A calm bookstore look: warm paper backgrounds, an editorial serif (**Fraunces**)
+for headings, **Inter** for UI text, deep ink-green as the brand colour, gold as
+the accent, and book covers as the main visual.
 
-- **Design tokens** live in `src/index.css` (`@theme` — colors, fonts,
-  breakpoints) — a single Tailwind root.
-- **Reusable utilities**: `.glass` / `.glass-strong`, `.aurora-field`,
-  `.text-gradient`, `.bg-aurora`, and motion (`.animate-rise`, `.animate-float`).
-- **UI primitives** in `src/components/ui/` — `GlassCard`, `StatCard`, `Badge`,
-  `PageHeader`, `EmptyState`, `Avatar`, `AuthWrapper`.
+- **Tokens** live in `src/index.css` as CSS variables that switch with
+  `[data-theme="dark"]`, exposed to Tailwind as `bg-canvas`, `bg-surface`,
+  `bg-sunken`, `text-fg`, `text-fg-muted`, `border-line`, `bg-brand`,
+  `text-gold`, `bg-success-soft`, … Never hard-code colours; use the tokens so
+  both themes work.
+- **Theme**: light / dark / system (`ThemeContext`), applied before first paint
+  by a tiny script in `index.html`, so there's no flash.
+- **Components** in `src/ui/`, imported from `@/ui`: `Button`, `IconButton`,
+  `Field` + `Input`/`Textarea`/`Select`, `Card`, `Badge`, `Avatar`, `Modal`
+  (native `<dialog>`), `Popover`/`MenuItem`, `BookCover` (with typeset fallback
+  covers), `Skeleton`, `EmptyState`, `ErrorState`, `Alert`, `Container`,
+  `PageHeader`, `Pagination`.
+- **Gallery**: run `npm run dev` and open **`/dev/design`** to see every
+  component in both themes. The page exists only in development builds.
+- **RTL-ready**: layouts use logical utilities (`ms-`/`me-`, `ps-`/`pe-`,
+  `start-`/`end-`, `text-start`), and directional icons flip with `rtl:rotate-180`.
+
+---
+
+## 🌐 Text & languages
+
+All UI text goes through `t()` from `src/i18n` (strings in
+`src/i18n/locales/en.js`). English ships today. **To add Urdu**, create
+`locales/ur.js` with the same keys and enable it in `LOCALES`. The provider sets
+`<html lang dir="rtl">`, and the layout mirrors on its own. Dates, numbers and
+prices (`price(1400)` → "Rs 1,400") use the `Intl` formatters from `useI18n()`,
+in Pakistan time.
 
 ---
 
@@ -44,93 +73,52 @@ background.
 
 ### Provider tree
 ```
-GoogleOAuthProvider → QueryClientProvider → BrowserRouter → AuthProvider → ModalProvider → App
+I18n → Theme → ErrorBoundary → GoogleOAuth → ReactQuery → Router → Auth → Socket → Modal → Routes
 ```
 
-### Role-based routing (RBAC)
-A **single signup** feeds the app. `AppRoutes` shows a `SplashScreen` while the
-session loads, then renders `AuthLayout` (unauthenticated) or `HomeLayout`
-(authenticated). `HomeLayout` branches the **entire route tree on `user.role`** —
-admins get the admin portal, everyone else gets the reader portal — all wrapped
-in a shared `AppShell` (sidebar + topbar).
+### API layer (`src/lib/`)
+- `lib/http.js`: one Axios instance. It adds the `Bearer` token and turns every
+  failure into an **`ApiError`** `{ message, status, requestId }`. The message
+  comes from the backend's `error` field, and the request id matches the
+  backend's activity log. A 401 on a signed-in session signs the user out.
+- `lib/api/index.js`: **one function per backend endpoint**, grouped by area:
+  `auth`, `twoFactor`, `user`, `files`, `books`, `categories`, `rentals`,
+  `reader`, `payments`, `packages`, `reviews`, `bookRequests`, `notifications`,
+  `admin`. Each returns the response's `data`.
+- `lib/queryClient.js`: React Query defaults plus **`qk`**, the single list of
+  cache keys.
 
-### Barrel exports
-Components are grouped and re-exported through barrels so consumers import from a
-single path:
-```js
-import { GlassCard, PageHeader, Modal, SocialAuth } from "@/components";
-```
-Folders: `common/` (shared), `ui/` (primitives), `layout/` (AppShell), `profile/`
-(profile sections). Single-use components (e.g. `Sidebar`, `Topbar`) are imported
-directly rather than barreled.
+### Live updates (`src/realtime/SocketProvider.jsx`)
+There is one socket per tab. It's anonymous for visitors and reconnects with
+the token after sign-in. Server events become cache refreshes:
+- `notification:new`: shows a toast and refreshes the inbox and the area it's
+  about (payments, rentals, …).
+- `notification:read`: syncs the unread count across tabs.
+- `book:availability`: refetches that book's queue and availability. Book pages
+  call `useWatchBook(bookId)`.
+- `account:blocked` and refused tokens: sign the user out.
 
-### API layer (`src/api/`)
-A single Axios instance composed from per-domain factories (`createAuthApi`,
-`createUserApi`, `createCommonApi`). A request interceptor injects the `Bearer`
-token from `localStorage`; a response interceptor unwraps backend error messages
-into a rejected string. Add endpoints by extending the relevant `*Routes.js`
-factory.
+### Routing (`src/routes/`)
+| Area | Paths | Guard |
+|------|-------|-------|
+| Public | `/`, `/books`, `/books/:id`, `/requests`, `/plans`, `/privacy`, … | none |
+| Sign-in flow | `/login`, `/signup`, `/verify-otp`, `/forgot-password`, `/reset-password/:token`, `/two-factor` | `GuestOnly` |
+| Reader | `/account/*`, `/read/:bookId` | `RequireAuth` |
+| Admin console | `/admin/*` | `RequireAuth role="admin"` |
 
-### Contexts
-- **`AuthContext`** — JWT in `localStorage`, exposes
-  `{ isAuthenticated, user, preferences, login, logout, refreshProfile }`.
-  `refreshProfile()` silently re-pulls profile data (no splash flash) after edits.
-- **`ModalContext`** — a global `{ type, data }` modal state with
-  `openModal(type, data)` / `closeModal()`, driving the portal-based `Modal`.
+The guards only keep people on screens they can use. The backend enforces
+every rule itself.
 
-### Path aliases
-`@/...` (configured in `vite.config.js` + `jsconfig.json`): `@/api`,
-`@/components`, `@/context`, `@/constants`, `@/hooks`, `@/layout`, `@/pages`,
-`@/utils`.
+### Layouts (`src/layout/`)
+- `PublicLayout`: sticky header (nav, theme toggle, notification bell,
+  account menu), page and footer.
+- `AdminLayout`: sidebar (a drawer on small screens) and top bar.
+- `LegacyScreen`: a temporary dark backdrop for the old profile screen.
 
----
-
-## 🔐 Authentication experience
-
-Every auth screen shares the `AuthWrapper` (immersive aurora brand panel + form
-card). The full flow:
-
-| Screen | Route | What it does |
-|--------|-------|--------------|
-| **Login** | `/login` | Email/password; routes to 2FA or verify-email when needed |
-| **Signup** | `/signup` | Registration → redirects to OTP verification |
-| **Verify OTP** | `/verify-otp` | 6-digit email verification + **resend** (60s cooldown) |
-| **Forgot password** | `/forgot-password` | Request a reset link |
-| **Reset password** | `/reset-password/:token` | Set a new password |
-| **2FA challenge** | `/two-factor` | Enter the authenticator code (pending-token flow) |
-
-### Social sign-in
-The shared **`SocialAuth`** component (on Login & Signup) renders the Google
-button (`@react-oauth/google`, returns an `id_token`) and a Facebook button (lazy
-`utils/facebook.js` SDK loader, returns an access token), posts to
-`/auth/social`, and handles the **link-confirmation dialog** when the email
-already exists.
-
-### Smart redirects
-The login flow reacts to the backend's response shape:
-- `twoFactorRequired` → navigate to `/two-factor` with the pending token.
-- `linkRequired` (social) → open the link-confirmation `Modal`.
-- "verify your email" → route to `/verify-otp` so the user can resend & verify.
-
----
-
-## ✨ Features
-
-- **Reader & Admin portals** — role-aware sidebar/topbar shell with distinct
-  navigation and dashboards.
-- **Full profile screen** — identity card with **avatar upload/remove**, editable
-  personal info (name, bio, phone, alt email, DOB, gender, notification
-  toggles), **change password**, **two-factor auth** (QR enable / disable), and
-  **connected accounts** (linked providers).
-- **Two-factor auth UI** — scan-the-QR enable modal, disable modal, and the login
-  challenge screen.
-- **Reusable `Modal`** — portal-rendered (escapes transformed ancestors), themed,
-  with ESC / outside-click / scroll-lock, driven by `ModalContext`.
-- **`useUpload` hook** (`@/hooks`) — one place for `/common/upload`
-  (FormData + response unwrapping); returns `upload` / `uploadAsync`.
-- **Custom `Input`** — one component for text, password (show/hide), textarea,
-  checkbox, **select**, and **date**, with Formik-friendly props.
-- **PWA** — installable, auto-updating service worker.
+### Legacy code (removed in F2)
+The sign-in screens, the profile page, `src/api/` (old client), `src/components/`
+and `src/styles/legacy.css` are the previous "Aurora Glass" UI. They still work
+and are rebuilt in F2. New code must not import them.
 
 ---
 
@@ -139,37 +127,38 @@ The login flow reacts to the backend's response shape:
 ```
 library-fronend/
 ├── src/
-│   ├── api/           axios instance + per-domain route factories
+│   ├── ui/            design system components (import from "@/ui")
+│   ├── lib/           http client, API functions, React Query client + keys
+│   ├── realtime/      Socket.IO provider + useWatchBook
+│   ├── i18n/          t(), formatters, locales/en.js
+│   ├── context/       AuthContext, ThemeContext, ModalContext (legacy)
+│   ├── routes/        AppRoutes, guards, ScrollToTop
+│   ├── layout/        PublicLayout, AdminLayout, LegacyScreen
 │   ├── components/
-│   │   ├── common/    Input, PrimaryButton, Modal, SocialAuth, SplashScreen, Sidebar, Topbar, AuroraBackground
-│   │   ├── ui/        GlassCard, StatCard, Badge, PageHeader, EmptyState, Avatar, AuthWrapper
-│   │   ├── layout/    AppShell
-│   │   └── profile/   PersonalInfo, Security, TwoFactor, ConnectedAccounts
-│   ├── constants/     baseURL, social client ids, navigation config
-│   ├── context/       AuthContext, ModalContext
-│   ├── hooks/         useUpload
-│   ├── layout/        AuthLayout (router), HomeLayout (RBAC router)
-│   ├── pages/         Auth/*, User/*, Admin/*, Profile/*
-│   ├── utils/         helper, facebook (SDK loader)
+│   │   └── shell/     Logo, SiteHeader, SiteFooter, NotificationBell, UserMenu, ThemeToggle, OfflineBanner
+│   ├── hooks/         useNotifications, useUpload (legacy)
+│   ├── pages/         Home, system/ (404, error, loader, coming soon, /dev/design), Auth/* + Profile (legacy)
+│   ├── constants/     API/socket URLs, social client ids
 │   ├── App.jsx        provider tree
-│   └── index.css      Aurora Glass theme (tokens + utilities)
+│   └── index.css      design tokens + base styles
 ```
 
 ---
 
 ## ⚙️ Environment variables
 
-Create a `.env` in `library-fronend/`:
+Copy `.env.example` to `.env`:
 
 ```bash
-VITE_APP_ENV=development                # "development" → backend at localhost:5001
+VITE_API_URL=http://localhost:5001        # backend (REST + Socket.IO)
+# VITE_SOCKET_URL=http://localhost:5001   # only if sockets live elsewhere
 VITE_GOOGLE_CLIENT_ID=<google client id>.apps.googleusercontent.com
 VITE_FACEBOOK_APP_ID=<facebook app id>
 ```
 
-> These IDs are **public** (they ship in browser code). The Google/Facebook
-> *secrets* stay only in the backend. Vite reads `.env` at startup — restart the
-> dev server after changing it.
+> Only `VITE_*` values reach the browser, and they're public by design. The
+> Google/Facebook *secrets* stay in the backend. Restart the dev server after
+> changing `.env`.
 
 ---
 
@@ -178,22 +167,15 @@ VITE_FACEBOOK_APP_ID=<facebook app id>
 ```bash
 cd library-fronend
 npm install
-# create .env (see above)
-npm run dev        # Vite dev server on http://localhost:5173
+cp .env.example .env
+npm run dev        # http://localhost:5173 (backend on :5001)
 ```
-
-> The backend must be running on **port 5001** (the dev API base URL is
-> hardcoded in `src/constants/index.js`).
 
 ### Scripts
 | Command | Description |
 |---------|-------------|
-| `npm run dev` | Vite dev server (port 5173) |
+| `npm run dev` | Vite dev server |
 | `npm run build` | Production build |
 | `npm run preview` | Preview the build |
 | `npm run lint` / `lint:fix` | ESLint |
 | `npm run format` / `format:check` | Prettier write / check |
-
----
-
-_Built by Aarish_
