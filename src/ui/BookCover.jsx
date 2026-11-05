@@ -58,7 +58,7 @@ const BookCover = ({
             {title}
           </p>
           {author ? (
-            <p className="mt-1 line-clamp-2 text-[clamp(0.5rem,4.5cqw,0.75rem)] text-white/75">
+            <p className="mt-1 line-clamp-2 text-[clamp(0.5rem,4.5cqw,0.75rem)] text-white/90">
               {author}
             </p>
           ) : null}

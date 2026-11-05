@@ -841,8 +841,6 @@ const en = {
     previous: "Previous",
     next: "Next",
     pageOf: "Page {page} of {total}",
-    comingSoon: "Coming soon",
-    comingSoonBody: "This part of LibraryHub is being built ({phase}).",
     currency: "Rs {amount}",
   },
 
@@ -862,6 +860,14 @@ const en = {
     sessionExpired: "Your session has expired. Please sign in again.",
   },
 
+  legal: {
+    eyebrow: "Legal",
+    help: "Help",
+    updated: "Last updated {date}",
+    onThisPage: "On this page",
+    questions: "Questions about anything here?",
+    contactUs: "Contact us",
+  },
   footer: {
     about: "A rental library for readers in Pakistan.",
     rights: "© {year} LibraryHub. All rights reserved.",

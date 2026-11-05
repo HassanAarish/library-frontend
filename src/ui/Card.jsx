@@ -15,10 +15,11 @@ const Card = ({ as: Tag = "div", padded = true, interactive, className, children
   </Tag>
 );
 
-export const CardHeader = ({ title, description, action, className }) => (
+/** Card title row. `as` sets the heading level (h2 under the page h1, h3 inside a section). */
+export const CardHeader = ({ title, description, action, className, as: Heading = "h2" }) => (
   <div className={cn("mb-4 flex items-start justify-between gap-4", className)}>
     <div>
-      <h3 className="text-lg font-semibold text-fg">{title}</h3>
+      <Heading className="text-lg font-semibold text-fg">{title}</Heading>
       {description ? <p className="mt-1 text-sm text-fg-muted">{description}</p> : null}
     </div>
     {action}

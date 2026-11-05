@@ -1,7 +1,8 @@
 import { Link, useParams } from "react-router-dom";
 import { LuArrowLeft, LuMonitorSmartphone } from "react-icons/lu";
 import { useI18n } from "@/i18n";
-import { useBook, useDocumentTitle } from "@/hooks/useBooks";
+import { useBook } from "@/hooks/useBooks";
+import { useSeo } from "@/hooks/useSeo";
 import AvailabilityPanel from "@/components/books/AvailabilityPanel";
 import { Badge, BookCover, Button, Card, Container, EmptyState, ErrorState, Skeleton } from "@/ui";
 
@@ -32,7 +33,26 @@ const BookDetail = () => {
   const { bookId } = useParams();
   const { t, price } = useI18n();
   const { data: book, isLoading, isError, error, refetch } = useBook(bookId);
-  useDocumentTitle(book?.title);
+  useSeo({
+    title: book?.title,
+    description: book
+      ? `${t("book.by", { author: book.author })}. ${book.description ?? ""}`
+      : undefined,
+    image: book?.coverImage?.url,
+    type: "book",
+    jsonLd: book && {
+      "@context": "https://schema.org",
+      "@type": "Book",
+      name: book.title,
+      author: { "@type": "Person", name: book.author },
+      ...(book.isbn && { isbn: book.isbn }),
+      ...(book.language && { inLanguage: book.language }),
+      ...(book.publishedYear && { datePublished: String(book.publishedYear) }),
+      ...(book.category?.name && { genre: book.category.name }),
+      ...(book.coverImage?.url && { image: book.coverImage.url }),
+      ...(book.description && { description: book.description }),
+    },
+  });
 
   const back = (
     <Link

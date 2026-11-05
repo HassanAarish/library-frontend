@@ -6,7 +6,6 @@ import AuthLayout from "@/layout/AuthLayout";
 import Home from "@/pages/Home";
 import Catalog from "@/pages/Catalog";
 import BookDetail from "@/pages/BookDetail";
-import ComingSoon from "@/pages/system/ComingSoon";
 import NotFound from "@/pages/system/NotFound";
 import FullPageLoader from "@/pages/system/FullPageLoader";
 import {
@@ -21,6 +20,8 @@ import { GuestOnly, RequireAuth } from "./guards";
 
 const Profile = lazy(() => import("@/pages/Profile"));
 const Plans = lazy(() => import("@/pages/Plans"));
+const LegalPage = lazy(() => import("@/pages/Legal/LegalPage"));
+const Contact = lazy(() => import("@/pages/Legal/Contact"));
 const RentBook = lazy(() => import("@/pages/Rent"));
 const Library = lazy(() => import("@/pages/Library"));
 const Payments = lazy(() => import("@/pages/Payments"));
@@ -73,9 +74,9 @@ const AppRoutes = () => (
         <Route path="/requests" element={<Requests />} />
         <Route path="/requests/:requestId" element={<RequestDetail />} />
         <Route path="/plans" element={<Plans />} />
-        <Route path="/privacy" element={<ComingSoon title="Privacy policy" phase="F6" />} />
-        <Route path="/terms" element={<ComingSoon title="Terms" phase="F6" />} />
-        <Route path="/contact" element={<ComingSoon title="Contact" phase="F6" />} />
+        <Route path="/privacy" element={<LegalPage key="privacy" name="privacy" />} />
+        <Route path="/terms" element={<LegalPage key="terms" name="terms" />} />
+        <Route path="/contact" element={<Contact />} />
 
         <Route element={<RequireAuth />}>
           <Route path="/books/:bookId/rent" element={<RentBook />} />

@@ -3,7 +3,8 @@ import { useSearchParams } from "react-router-dom";
 import { LuBookPlus, LuPlus, LuSearch } from "react-icons/lu";
 import { useAuth } from "@/context/AuthContext";
 import { useI18n } from "@/i18n";
-import { useDebouncedValue, useDocumentTitle } from "@/hooks/useBooks";
+import { useDebouncedValue } from "@/hooks/useBooks";
+import { useSeo } from "@/hooks/useSeo";
 import { useBookRequests } from "@/hooks/useCommunity";
 import RequestCard from "@/components/requests/RequestCard";
 import RequestForm, { CategorySuggest } from "@/components/requests/RequestForm";
@@ -23,7 +24,7 @@ import {
 const Requests = () => {
   const { t } = useI18n();
   const { isAuthenticated } = useAuth();
-  useDocumentTitle(t("requests.eyebrow"));
+  useSeo({ title: t("requests.eyebrow"), description: t("requests.description") });
   const [params, setParams] = useSearchParams();
   const [formOpen, setFormOpen] = useState(params.get("new") === "1");
 

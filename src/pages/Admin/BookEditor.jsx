@@ -345,7 +345,7 @@ const BookEditor = () => {
           </Card>
         </div>
 
-        <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
+        <div className="space-y-6 lg:sticky lg:top-24 lg:self-start">
           <Card as="section">
             <CardHeader title={t("admin.booksPage.files")} />
             <div className="space-y-5">
@@ -498,7 +498,7 @@ const BookEditor = () => {
               )}
             </div>
           </Card>
-        </aside>
+        </div>
       </div>
     </AdminPage>
   );

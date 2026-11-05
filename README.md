@@ -8,13 +8,21 @@ in the browser; the admin runs the catalogue, payments and requests.
 This is the SPA half of a two-part app. The Express/MongoDB API (REST + Socket.IO)
 lives in `../library-backend`; its README documents every endpoint and event.
 
-> **Status:** the frontend is being rebuilt in phases. **Done:** F0 (design
-> system, API layer, live updates, routing, layouts), F1 (catalogue and book
-> page with live availability), F2 (sign-in flow, profile, responsive pass,
-> old UI removed), F3 (renting, Easypaisa payments, plans, library, reader) and
-> F4 (book requests, category suggestions, notifications inbox) and F5 (admin
-> console). **Next:** F6 polish (legal pages, SEO, accessibility, tests).
-> Routes not built yet show a "coming soon" page naming their phase.
+> **Status:** the rebuild is complete: F0 (design system, API layer, live
+> updates, routing, layouts), F1 (catalogue), F2 (accounts, responsive pass),
+> F3 (renting, Easypaisa payments, plans, reader), F4 (book requests, category
+> suggestions, inbox), F5 (admin console) and F6 (legal pages, SEO,
+> accessibility, tests).
+
+## ✨ Polish (F6)
+
+| Area | What's there |
+|------|--------------|
+| Legal & help | `/privacy`, `/terms` (contents list, numbered sections, both carry the no-download rule) and `/contact` (support email, WhatsApp if set, payment tip, FAQ). Long text lives in `src/content/legal/en.js`; an Urdu version is a sibling `ur.js`. `{email}` is filled from `VITE_SUPPORT_EMAIL` |
+| SEO | `useSeo()` (`src/hooks/useSeo.js`) sets title, description, canonical, Open Graph/Twitter tags and JSON-LD (`Book` on book pages). Account, admin, reader and sign-in screens get `noindex` automatically. `index.html` carries default preview tags (WhatsApp/Facebook don't run JS) with `og-image.png`. The build writes `robots.txt` pointing at the API's `/seo/sitemap.xml` (public pages + every published book) |
+| Icons | `favicon.svg`, `apple-touch-icon.png` and the PWA icons (192/512, maskable) |
+| Accessibility | Checked with axe (WCAG 2.1 AA) on 20 pages in light and dark: 0 violations. Colour tokens meet 4.5:1, headings don't skip levels, skip link to `#main`, avatar initials never rename buttons |
+| Tests | `npm test`: Vitest + Testing Library in jsdom (`src/**/*.test.{js,jsx}`): i18n, legal content, site config fallbacks, `useSeo`, notification links, UI components, countdown |
 
 ## 🛠️ Admin console (F5)
 
@@ -253,7 +261,9 @@ library-fronend/
 │   │   ├── books/     BookCard + BookGrid, AvailabilityPanel
 │   │   └── auth/      SocialButtons (Google, Facebook, link prompt)
 │   ├── hooks/         useBooks (catalogue, book, categories, live availability), useNotifications
-│   ├── pages/         Home, Catalog, BookDetail, Auth/ (sign-in flow + form rules), Profile/, system/ (404, error, loader, coming soon, /dev/design)
+│   ├── pages/         Home, Catalog, BookDetail, Auth/ (sign-in flow + form rules), Profile/, Legal/ (privacy, terms, contact), Admin/, system/ (404, error, loader, /dev/design)
+│   ├── content/       long-form text (legal/en.js)
+│   ├── test/          test setup + render helper
 │   ├── utils/         facebook (SDK loader)
 │   ├── constants/     API/socket URLs, social client ids
 │   ├── App.jsx        provider tree
@@ -271,7 +281,12 @@ VITE_API_URL=http://localhost:5001        # backend (REST + Socket.IO)
 # VITE_SOCKET_URL=http://localhost:5001   # only if sockets live elsewhere
 VITE_GOOGLE_CLIENT_ID=<google client id>.apps.googleusercontent.com
 VITE_FACEBOOK_APP_ID=<facebook app id>
+VITE_SITE_URL=https://<your-domain>       # canonical links + link-preview image
+VITE_SUPPORT_EMAIL=<support email>         # /contact and the legal pages
+VITE_SUPPORT_WHATSAPP=                     # e.g. 923001234567 (03xx works too); empty hides it
 ```
+
+Placeholder or malformed values fall back safely (current origin, `support@<this domain>`).
 
 > Only `VITE_*` values reach the browser, and they're public by design. The
 > Google/Facebook *secrets* stay in the backend. Restart the dev server after
@@ -294,5 +309,6 @@ npm run dev        # http://localhost:5173 (backend on :5001)
 | `npm run dev` | Vite dev server |
 | `npm run build` | Production build |
 | `npm run preview` | Preview the build |
+| `npm test` / `test:watch` | Vitest unit and component tests |
 | `npm run lint` / `lint:fix` | ESLint |
 | `npm run format` / `format:check` | Prettier write / check |

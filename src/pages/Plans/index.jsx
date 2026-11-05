@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { packages } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { useI18n } from "@/i18n";
-import { useDocumentTitle } from "@/hooks/useBooks";
+import { useSeo } from "@/hooks/useSeo";
 import { useMyPackages, usePlans } from "@/hooks/useRentals";
 import {
   Alert,
@@ -23,7 +23,7 @@ import {
 /** /plans: the 3/5/10-book yearly packages; buying one goes to its payment page. */
 const Plans = () => {
   const { t, price, date } = useI18n();
-  useDocumentTitle(t("plans.eyebrow"));
+  useSeo({ title: t("plans.eyebrow"), description: t("plans.description") });
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();

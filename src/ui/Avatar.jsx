@@ -38,7 +38,13 @@ const Avatar = ({ src, name, size = "md", className }) => {
           onError={() => setFailed(true)}
         />
       ) : (
-        <span aria-hidden>{initials(name)}</span>
+        // Drawn with CSS so the initials stay decoration: they never join the
+        // accessible name of a labelled button (axe label-content-name-mismatch).
+        <span
+          aria-hidden
+          data-initials={initials(name)}
+          className="before:content-[attr(data-initials)]"
+        />
       )}
     </span>
   );

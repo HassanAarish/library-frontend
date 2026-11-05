@@ -23,20 +23,20 @@
   /* text */
   --fg: #1f1a14;
   --fg-muted: #5e554a;
-  --fg-subtle: #8a8073;
+  --fg-subtle: #6f665a;
 
   /* brand: deep ink green; accent: bookbinding gold */
   --brand: #1f5c4a;
   --brand-hover: #184a3b;
   --brand-soft: #e3efe9;
   --on-brand: #ffffff;
-  --accent: #b7791f;
+  --accent: #8f5d12;
   --accent-soft: #f7ecd9;
 
   /* status */
-  --success: #2f7d4f;
+  --success: #287045;
   --success-soft: #e4f2e9;
-  --warning: #a8620b;
+  --warning: #94560a;
   --warning-soft: #fbefdc;
   --danger: #b4372f;
   --danger-soft: #f9e4e1;
@@ -58,7 +58,7 @@
 
   --fg: #f3ede4;
   --fg-muted: #b9ae9f;
-  --fg-subtle: #8a8073;
+  --fg-subtle: #9b9184;
 
   --brand: #6fb89e;
   --brand-hover: #86c7b0;

@@ -4,6 +4,7 @@ import { books, categories, rentals } from "@/lib/api";
 import { qk } from "@/lib/queryClient";
 import { useAuth } from "@/context/AuthContext";
 import { useWatchBook } from "@/realtime/SocketProvider";
+import { useSeo } from "./useSeo";
 
 /** Catalogue page: keeps the previous page on screen while the next loads. */
 export const useCatalog = (params) =>
@@ -56,9 +57,5 @@ export const useDebouncedValue = (value, delay = 350) => {
   return debounced;
 };
 
-/** Sets the browser tab title: "Title · LibraryHub". */
-export const useDocumentTitle = (title) => {
-  useEffect(() => {
-    document.title = title ? `${title} · LibraryHub` : "LibraryHub: rent and read books online";
-  }, [title]);
-};
+/** Sets the tab title ("Title · LibraryHub") and the default SEO tags; see useSeo for more. */
+export const useDocumentTitle = (title) => useSeo({ title });

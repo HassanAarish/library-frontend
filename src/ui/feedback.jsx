@@ -9,7 +9,14 @@ export const Skeleton = ({ className, rounded = "rounded-md" }) => (
 );
 
 /** "Nothing here yet" with an optional call to action. */
-export const EmptyState = ({ icon = <LuInbox />, title, description, action, className }) => (
+export const EmptyState = ({
+  icon = <LuInbox />,
+  title,
+  description,
+  action,
+  className,
+  as: Heading = "h2",
+}) => (
   <div
     className={cn(
       "flex flex-col items-center justify-center rounded-card border border-dashed border-line-strong",
@@ -20,7 +27,7 @@ export const EmptyState = ({ icon = <LuInbox />, title, description, action, cla
     <span className="mb-4 flex size-12 items-center justify-center rounded-full bg-sunken text-2xl text-fg-subtle">
       {icon}
     </span>
-    <h3 className="text-lg font-semibold text-fg">{title}</h3>
+    <Heading className="text-lg font-semibold text-fg">{title}</Heading>
     {description ? <p className="mt-1 max-w-md text-sm text-fg-muted">{description}</p> : null}
     {action ? <div className="mt-5">{action}</div> : null}
   </div>

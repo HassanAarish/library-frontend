@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { LuBookPlus, LuSearch, LuX } from "react-icons/lu";
 import { useI18n } from "@/i18n";
-import { useCatalog, useCategories, useDebouncedValue, useDocumentTitle } from "@/hooks/useBooks";
+import { useCatalog, useCategories, useDebouncedValue } from "@/hooks/useBooks";
+import { useSeo } from "@/hooks/useSeo";
 import { BookGrid } from "@/components/books/BookCard";
 import {
   Button,
@@ -34,7 +35,7 @@ const PAGE_SIZE = 20;
  */
 const Catalog = () => {
   const { t } = useI18n();
-  useDocumentTitle(t("catalog.title"));
+  useSeo({ title: t("catalog.title"), description: t("catalog.description") });
   const [params, setParams] = useSearchParams();
 
   const search = params.get("search") ?? "";
@@ -144,12 +145,13 @@ const Catalog = () => {
 
       {data ? (
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm text-fg-muted" aria-live="polite">
+          {/* The result count heads the grid (book cards are h3). */}
+          <h2 className="font-sans text-sm font-normal text-fg-muted" aria-live="polite">
             <span className="font-semibold text-fg">
               {t("catalog.results", { count: data.totalDocs })}
             </span>{" "}
             {search ? t("catalog.resultsFor", { query: search }) : null}
-          </p>
+          </h2>
           {filtered ? (
             <Button
               variant="ghost"
