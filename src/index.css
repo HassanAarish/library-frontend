@@ -216,6 +216,15 @@
   animation: var(--animate-shimmer);
 }
 
+/* The book reader: no long-press save on phones, and nothing to print. */
+@utility reader-protect {
+  -webkit-touch-callout: none;
+
+  @media print {
+    display: none;
+  }
+}
+
 /* Toasts (react-toastify) in the design system's colours. */
 .Toastify__toast {
   background: var(--surface);

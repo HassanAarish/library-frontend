@@ -10,10 +10,31 @@ lives in `../library-backend`; its README documents every endpoint and event.
 
 > **Status:** the frontend is being rebuilt in phases. **Done:** F0 (design
 > system, API layer, live updates, routing, layouts), F1 (catalogue and book
-> page with live availability) and F2 (sign-in flow, profile, responsive pass,
-> old UI removed). **Next:** F3 renting & reader → F4 community & inbox →
-> F5 admin → F6 polish. Routes not built yet show a "coming soon" page naming
-> their phase.
+> page with live availability), F2 (sign-in flow, profile, responsive pass,
+> old UI removed) and F3 (renting, Easypaisa payments, plans, library, reader).
+> **Next:** F4 community & inbox → F5 admin → F6 polish. Routes not built yet
+> show a "coming soon" page naming their phase.
+
+## 📚 Renting & reading (F3)
+
+| Screen | Route | What it does |
+|--------|-------|--------------|
+| Rent a book | `/books/:id/rent` | Start as soon as it's free or on a chosen day (up to 60 days ahead); pay once or with a plan credit (preselected when the reader has credits); free books need no payment |
+| Payment | `/account/payments/:id` | Easypaisa account, amount and reference with copy buttons, the hold countdown, then the proof form (TID, sender number, private receipt screenshot). Then under review / confirmed / not confirmed, updated live |
+| Payments | `/account/payments` | Every payment with status and refund state |
+| Plans | `/plans` | The 3/5/10-book yearly plans with price per book and "best value"; buying one goes to its payment page; a pending purchase can be continued |
+| My library | `/account` | Plan credits, then **Reading now** (read, extend 7 days, return), **Upcoming** (pay, view payment, start now, cancel) and **History**; cancelling explains the credit or refund outcome |
+| Reader | `/read/:bookId` | Full-screen, page by page: arrows/keys, page number box, zoom, the next page loaded in advance, last page remembered. No-access screen outside the rental period |
+
+The account tabs (My library, Payments, Profile) share one frame
+(`components/account/AccountPage`): the same width, header and tab bar.
+
+**Reader protection (on top of the server's per-reader watermark):** pages
+arrive as image data with no file to download. Right-click, dragging, copying,
+text selection, long-press save and printing (including Ctrl/⌘+P and S) are
+blocked. Only one page is fetched ahead, which keeps normal reading well under
+the server's limit of 40 pages a minute, and "too fast" is explained if it's
+hit.
 
 ## 🔐 Accounts (F2)
 

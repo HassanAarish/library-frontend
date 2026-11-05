@@ -20,6 +20,12 @@ import {
 import { GuestOnly, RequireAuth } from "./guards";
 
 const Profile = lazy(() => import("@/pages/Profile"));
+const Plans = lazy(() => import("@/pages/Plans"));
+const RentBook = lazy(() => import("@/pages/Rent"));
+const Library = lazy(() => import("@/pages/Library"));
+const Payments = lazy(() => import("@/pages/Payments"));
+const PaymentPage = lazy(() => import("@/pages/Payment"));
+const Reader = lazy(() => import("@/pages/Reader"));
 // Dev-only component gallery; the import is dropped from production builds.
 const DesignSystem = import.meta.env.DEV ? lazy(() => import("@/pages/system/DesignSystem")) : null;
 
@@ -51,19 +57,17 @@ const AppRoutes = () => (
         <Route path="/books" element={<Catalog />} />
         <Route path="/books/:bookId" element={<BookDetail />} />
         <Route path="/requests" element={<ComingSoon title="Book requests" phase="F4" />} />
-        <Route path="/plans" element={<ComingSoon title="Reading plans" phase="F3" />} />
+        <Route path="/plans" element={<Plans />} />
         <Route path="/privacy" element={<ComingSoon title="Privacy policy" phase="F6" />} />
         <Route path="/terms" element={<ComingSoon title="Terms" phase="F6" />} />
         <Route path="/contact" element={<ComingSoon title="Contact" phase="F6" />} />
 
         <Route element={<RequireAuth />}>
-          <Route
-            path="/books/:bookId/rent"
-            element={<ComingSoon title="Rent this book" phase="F3" />}
-          />
-          <Route path="/account" element={<ComingSoon title="My library" phase="F3" />} />
-          <Route path="/account/rentals" element={<ComingSoon title="My rentals" phase="F3" />} />
-          <Route path="/account/payments" element={<ComingSoon title="My payments" phase="F3" />} />
+          <Route path="/books/:bookId/rent" element={<RentBook />} />
+          <Route path="/account" element={<Library />} />
+          <Route path="/account/rentals" element={<Navigate to="/account" replace />} />
+          <Route path="/account/payments" element={<Payments />} />
+          <Route path="/account/payments/:paymentId" element={<PaymentPage />} />
           <Route path="/account/requests" element={<ComingSoon title="My requests" phase="F4" />} />
           <Route
             path="/account/notifications"
@@ -78,7 +82,7 @@ const AppRoutes = () => (
 
       {/* The reader is full-screen (no site header). */}
       <Route element={<RequireAuth />}>
-        <Route path="/read/:bookId" element={<ComingSoon title="Reader" phase="F3" />} />
+        <Route path="/read/:bookId" element={<Reader />} />
       </Route>
 
       <Route path="/admin" element={<RequireAuth role="admin" />}>

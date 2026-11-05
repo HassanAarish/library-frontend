@@ -22,7 +22,10 @@ export const Field = ({ label, hint, error, required, className, children, label
   const hintId = hint ? `${id}-hint` : undefined;
   const errorId = error ? `${id}-error` : undefined;
 
-  const control = isValidElement(children)
+  // Wire up our own controls (Input, Select, …). A plain DOM element (e.g. a
+  // custom upload box) is left as is: `invalid` isn't a valid DOM attribute.
+  const isControl = isValidElement(children) && typeof children.type !== "string";
+  const control = isControl
     ? cloneElement(children, {
         id: children.props.id ?? id,
         invalid: Boolean(error),
@@ -35,7 +38,10 @@ export const Field = ({ label, hint, error, required, className, children, label
     <div className={cn("flex flex-col gap-1.5", className)}>
       {label ? (
         <div className="flex items-center justify-between gap-2">
-          <label htmlFor={children?.props?.id ?? id} className="text-sm font-medium text-fg">
+          <label
+            htmlFor={isControl ? (children.props.id ?? id) : undefined}
+            className="text-sm font-medium text-fg"
+          >
             {label}
             {required ? <span className="ms-0.5 text-danger">*</span> : null}
           </label>

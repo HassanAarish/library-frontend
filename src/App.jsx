@@ -1,4 +1,4 @@
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, useLocation } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Slide, ToastContainer } from "react-toastify";
@@ -15,9 +15,12 @@ import { GOOGLE_CLIENT_ID } from "@/constants";
 const Toasts = () => {
   const { dir } = useI18n();
   const { resolvedTheme } = useTheme();
+  // In the reader the bottom bar holds the page controls, so toasts go on top.
+  const reading = useLocation().pathname.startsWith("/read/");
+  const side = dir === "rtl" ? "left" : "right";
   return (
     <ToastContainer
-      position={dir === "rtl" ? "bottom-left" : "bottom-right"}
+      position={`${reading ? "top" : "bottom"}-${side}`}
       rtl={dir === "rtl"}
       theme={resolvedTheme}
       autoClose={4000}
