@@ -91,9 +91,7 @@ const BookDetail = () => {
               {book.category.name}
             </Badge>
           ) : null}
-          <h1 className="text-3xl/tight font-semibold text-balance sm:text-4xl">
-            {book.title}
-          </h1>
+          <h1 className="text-3xl/tight font-semibold text-balance sm:text-4xl">{book.title}</h1>
           <p className="mt-2 text-lg text-fg-muted">{t("book.by", { author: book.author })}</p>
 
           <div className="mt-6 flex flex-wrap items-baseline gap-x-4 gap-y-1">
