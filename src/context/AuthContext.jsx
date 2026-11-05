@@ -91,10 +91,6 @@ export const AuthProvider = ({ children }) => {
       signIn,
       signOut,
       refreshProfile,
-      // Old names, still used by screens not yet rebuilt (F2 removes them).
-      splashLoading: state.status === "loading",
-      login: signIn,
-      logout: signOut,
     }),
     [state, signIn, signOut, refreshProfile],
   );
@@ -108,7 +104,3 @@ export const useAuth = () => {
   if (!ctx) throw new Error("useAuth must be used inside <AuthProvider>");
   return ctx;
 };
-
-// Old hook name used by screens not yet rebuilt.
-// eslint-disable-next-line react-refresh/only-export-components
-export const useAuthContext = useAuth;

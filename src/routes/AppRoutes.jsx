@@ -2,7 +2,7 @@ import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import PublicLayout from "@/layout/PublicLayout";
 import AdminLayout from "@/layout/AdminLayout";
-import LegacyScreen from "@/layout/LegacyScreen";
+import AuthLayout from "@/layout/AuthLayout";
 import Home from "@/pages/Home";
 import Catalog from "@/pages/Catalog";
 import BookDetail from "@/pages/BookDetail";
@@ -34,14 +34,16 @@ const DesignSystem = import.meta.env.DEV ? lazy(() => import("@/pages/system/Des
 const AppRoutes = () => (
   <Suspense fallback={<FullPageLoader />}>
     <Routes>
-      {/* Sign-in flow: full-screen legacy screens until F2 rebuilds them. */}
+      {/* Sign-in flow (guests only; signed-in users are sent on). */}
       <Route element={<GuestOnly />}>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<RegisterPage />} />
-        <Route path="/verify-otp" element={<VerifyOtpPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-        <Route path="/two-factor" element={<TwoFactorVerifyPage />} />
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<RegisterPage />} />
+          <Route path="/verify-otp" element={<VerifyOtpPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+          <Route path="/two-factor" element={<TwoFactorVerifyPage />} />
+        </Route>
       </Route>
 
       <Route element={<PublicLayout />}>
@@ -67,14 +69,7 @@ const AppRoutes = () => (
             path="/account/notifications"
             element={<ComingSoon title="Notifications" phase="F4" />}
           />
-          <Route
-            path="/account/profile"
-            element={
-              <LegacyScreen>
-                <Profile />
-              </LegacyScreen>
-            }
-          />
+          <Route path="/account/profile" element={<Profile />} />
         </Route>
 
         {import.meta.env.DEV ? <Route path="/dev/design" element={<DesignSystem />} /> : null}

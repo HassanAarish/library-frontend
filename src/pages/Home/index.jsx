@@ -56,7 +56,7 @@ const Home = () => {
 
   return (
     <>
-      <section className="border-b border-line bg-linear-to-b from-gold-soft/60 to-canvas">
+      <section className="overflow-hidden border-b border-line bg-linear-to-b from-gold-soft/60 to-canvas">
         <Container
           size="xl"
           className="grid items-center gap-12 py-16 md:grid-cols-[1.15fr_1fr] md:py-24"

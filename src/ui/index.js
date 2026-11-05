@@ -3,6 +3,7 @@ export { cn } from "./cn";
 export { default as Button, IconButton } from "./Button";
 export { default as Spinner } from "./Spinner";
 export { Field, Input, Textarea, Select } from "./Field";
+export { PasswordInput, CodeInput, Switch, Divider } from "./controls";
 export { default as Card, CardHeader } from "./Card";
 export { default as Badge } from "./Badge";
 export { default as Avatar } from "./Avatar";

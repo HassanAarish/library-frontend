@@ -7,7 +7,6 @@ import { queryClient } from "@/lib/queryClient";
 import { I18nProvider, useI18n } from "@/i18n";
 import { ThemeProvider, useTheme } from "@/context/ThemeContext";
 import { AuthProvider } from "@/context/AuthContext";
-import { ModalProvider } from "@/context/ModalContext";
 import { SocketProvider } from "@/realtime/SocketProvider";
 import ErrorBoundary from "@/pages/system/ErrorBoundary";
 import AppRoutes from "@/routes/AppRoutes";
@@ -44,10 +43,8 @@ const App = () => (
             <BrowserRouter>
               <AuthProvider>
                 <SocketProvider>
-                  <ModalProvider>
-                    <AppRoutes />
-                    <Toasts />
-                  </ModalProvider>
+                  <AppRoutes />
+                  <Toasts />
                 </SocketProvider>
               </AuthProvider>
             </BrowserRouter>

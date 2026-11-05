@@ -33,7 +33,7 @@ const SiteHeader = () => {
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-canvas/85 backdrop-blur-md supports-backdrop-filter:bg-canvas/75">
-      <Container size="xl" className="flex h-16 items-center gap-4">
+      <Container size="xl" className="flex h-16 items-center gap-3 sm:gap-4">
         <Logo />
 
         <nav aria-label="Main" className="ms-6 hidden items-center gap-1 md:flex">
@@ -44,12 +44,15 @@ const SiteHeader = () => {
           ))}
         </nav>
 
-        <div className="ms-auto flex items-center gap-1.5">
-          <ThemeToggle />
+        <div className="ms-auto flex items-center gap-1 sm:gap-1.5">
+          {/* On phones the theme switch lives in the menu, to keep the bar uncrowded. */}
+          <span className="hidden sm:contents">
+            <ThemeToggle />
+          </span>
           {status === "loading" ? null : isAuthenticated ? (
             <>
               <NotificationBell />
-              <span className="ms-1.5">
+              <span className="ms-1 sm:ms-1.5">
                 <UserMenu />
               </span>
             </>
@@ -87,6 +90,10 @@ const SiteHeader = () => {
                 <Button to="/signup">{t("nav.signUp")}</Button>
               </div>
             ) : null}
+            <div className="mt-2 flex items-center justify-between rounded-lg px-3 py-1 sm:hidden">
+              <span className="text-sm font-medium text-fg-muted">{t("theme.toggle")}</span>
+              <ThemeToggle />
+            </div>
           </Container>
         </div>
       ) : null}

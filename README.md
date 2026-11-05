@@ -9,10 +9,45 @@ This is the SPA half of a two-part app. The Express/MongoDB API (REST + Socket.I
 lives in `../library-backend`; its README documents every endpoint and event.
 
 > **Status:** the frontend is being rebuilt in phases. **Done:** F0 (design
-> system, API layer, live updates, routing, layouts) and F1 (catalogue and book
-> page with live availability). **Next:** F2 accounts → F3 renting & reader →
-> F4 community & inbox → F5 admin → F6 polish. Routes not built yet show a
-> "coming soon" page naming their phase.
+> system, API layer, live updates, routing, layouts), F1 (catalogue and book
+> page with live availability) and F2 (sign-in flow, profile, responsive pass,
+> old UI removed). **Next:** F3 renting & reader → F4 community & inbox →
+> F5 admin → F6 polish. Routes not built yet show a "coming soon" page naming
+> their phase.
+
+## 🔐 Accounts (F2)
+
+| Screen | Route | Notes |
+|--------|-------|-------|
+| Sign in | `/login` | Email + password, Google, Facebook. 2FA → `/two-factor`; an unverified email → `/verify-otp`, where a new code can be sent straight away |
+| Create account | `/signup` | Password rule matches the backend (8+ characters, a letter and a number), then email verification |
+| Verify email | `/verify-otp` | 6-digit code, with a 60 s cooldown on "send a new code" |
+| Forgot / reset password | `/forgot-password`, `/reset-password/:token` | The reset link comes from the email |
+| Two-step code | `/two-factor` | Only reachable right after the first step |
+| Profile & settings | `/account/profile` | Photo, personal details, notification switches, password change, 2FA on/off with a QR code, connected Google/Facebook accounts |
+
+- After signing in, people return to the page they came from (e.g. a book's
+  "Sign in to rent"), otherwise to `/account` (readers) or `/admin` (admin).
+- If Google and Facebook both share an email with an existing account, the
+  app asks before linking them.
+- Changing the password signs you out everywhere, including the current tab.
+- The Google button only renders on origins listed in the Google OAuth client
+  (e.g. `http://localhost:5173`).
+
+## 📱 Responsive
+
+Every screen is built mobile-first and checked at **360px (phone), 768px
+(tablet) and 1366px (desktop)**, including a check that nothing makes the page
+scroll sideways. Patterns:
+
+- The site header collapses to a menu below `md`. On phones the theme switch
+  moves into that menu, so the bar fits a 360px screen when signed in.
+- The admin sidebar becomes a drawer below `lg`.
+- The sign-in brand panel shows from `lg` up; on phones it's the form only.
+- Forms and grids drop to one column (`sm:grid-cols-2`, `lg:grid-cols-[…]`),
+  and the catalogue grid goes from 5 columns down to 2.
+- Decorative elements that could poke out of their section are clipped
+  (`overflow-hidden`).
 
 ## 📖 Catalogue (F1)
 
@@ -141,13 +176,8 @@ every rule itself.
 - `PublicLayout`: sticky header (nav, theme toggle, notification bell,
   account menu), page and footer.
 - `AdminLayout`: sidebar (a drawer on small screens) and top bar.
-- `LegacyScreen`: a temporary dark backdrop for the old profile screen.
-
-### Legacy code (removed in F2)
-The sign-in screens, the profile page, `src/api/` (old client), the legacy
-parts of `src/components/`, and the **"LEGACY Aurora Glass"** section at the end
-of `src/index.css` are the previous UI. They still work and are rebuilt in F2,
-which deletes that CSS section. New code must not use them.
+- `AuthLayout`: the sign-in flow (brand panel + form), with `AuthHeader` /
+  `AuthFooter` helpers.
 
 ---
 
@@ -160,14 +190,16 @@ library-fronend/
 │   ├── lib/           http client, API functions, React Query client + keys
 │   ├── realtime/      Socket.IO provider + useWatchBook
 │   ├── i18n/          t(), formatters, locales/en.js
-│   ├── context/       AuthContext, ThemeContext, ModalContext (legacy)
+│   ├── context/       AuthContext, ThemeContext
 │   ├── routes/        AppRoutes, guards, ScrollToTop
-│   ├── layout/        PublicLayout, AdminLayout, LegacyScreen
+│   ├── layout/        PublicLayout, AdminLayout, AuthLayout
 │   ├── components/
 │   │   ├── shell/     Logo, SiteHeader, SiteFooter, NotificationBell, UserMenu, ThemeToggle, OfflineBanner
-│   │   └── books/     BookCard + BookGrid, AvailabilityPanel
-│   ├── hooks/         useBooks (catalogue, book, categories, live availability), useNotifications, useUpload (legacy)
-│   ├── pages/         Home, Catalog, BookDetail, system/ (404, error, loader, coming soon, /dev/design), Auth/* + Profile (legacy)
+│   │   ├── books/     BookCard + BookGrid, AvailabilityPanel
+│   │   └── auth/      SocialButtons (Google, Facebook, link prompt)
+│   ├── hooks/         useBooks (catalogue, book, categories, live availability), useNotifications
+│   ├── pages/         Home, Catalog, BookDetail, Auth/ (sign-in flow + form rules), Profile/, system/ (404, error, loader, coming soon, /dev/design)
+│   ├── utils/         facebook (SDK loader)
 │   ├── constants/     API/socket URLs, social client ids
 │   ├── App.jsx        provider tree
 │   └── index.css      design tokens + base styles
