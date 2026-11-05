@@ -73,9 +73,9 @@ const Profile = () => {
       <GlassCard glow className="animate-rise p-6 sm:p-7">
         <div className="flex flex-col items-center gap-5 sm:flex-row">
           <div className="relative shrink-0">
-            <div className="bg-aurora grid h-24 w-24 place-items-center overflow-hidden rounded-full font-display text-2xl font-semibold text-white">
+            <div className="bg-aurora grid size-24 place-items-center overflow-hidden rounded-full font-display text-2xl font-semibold text-white">
               {avatarUrl ? (
-                <img src={avatarUrl} alt={user?.name} className="h-full w-full object-cover" />
+                <img src={avatarUrl} alt={user?.name} className="size-full object-cover" />
               ) : (
                 initialsOf(user?.name)
               )}
@@ -85,14 +85,14 @@ const Profile = () => {
               onClick={() => fileRef.current?.click()}
               disabled={busy}
               title="Change picture"
-              className="absolute -bottom-1 -right-1 grid h-9 w-9 place-items-center rounded-full bg-primary text-white shadow-lg ring-2 ring-base-2 transition hover:bg-primary/80 disabled:opacity-50"
+              className="absolute -bottom-1 -inset-e-1 grid size-9 place-items-center rounded-full bg-primary text-white shadow-lg ring-2 ring-midnight-2 transition hover:bg-primary/80 disabled:opacity-50"
             >
               <LuCamera className="text-sm" />
             </button>
             <input ref={fileRef} type="file" accept="image/*" hidden onChange={onFilePick} />
           </div>
 
-          <div className="flex-1 text-center sm:text-left">
+          <div className="flex-1 text-center sm:text-start">
             <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
               <h2 className="font-display text-xl font-bold text-ink">{user?.name || "—"}</h2>
               <Badge tone={role === "admin" ? "admin" : "user"}>{role}</Badge>

@@ -55,7 +55,7 @@ const TwoFactor = ({ user, onUpdated }) => {
     <GlassCard className="animate-rise p-6 sm:p-7">
       <div className="flex items-start gap-3">
         <span
-          className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl ${
+          className={`grid size-10 shrink-0 place-items-center rounded-xl ${
             enabled ? "bg-success/15 text-success" : "bg-aurora-soft text-primary"
           }`}
         >
@@ -108,11 +108,7 @@ const TwoFactor = ({ user, onUpdated }) => {
         }
       >
         {modal?.type === "enable" && qrCode && (
-          <img
-            src={qrCode}
-            alt="2FA QR code"
-            className="mx-auto h-44 w-44 rounded-xl bg-white p-2"
-          />
+          <img src={qrCode} alt="2FA QR code" className="mx-auto size-44 rounded-xl bg-white p-2" />
         )}
 
         <div className="mt-4">

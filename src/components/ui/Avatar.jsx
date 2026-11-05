@@ -22,7 +22,7 @@ const Avatar = ({ name = "", src, size = "md", className = "" }) => {
       className={`relative inline-grid shrink-0 place-items-center rounded-full bg-aurora font-display font-semibold text-white ${SIZES[size]} ${className}`}
     >
       {src ? (
-        <img src={src} alt={name} className="h-full w-full rounded-full object-cover" />
+        <img src={src} alt={name} className="size-full rounded-full object-cover" />
       ) : (
         initials || "?"
       )}

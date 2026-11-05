@@ -57,6 +57,14 @@ export const books = {
   get: (bookId) => unwrap(http.get(`/book/${bookId}`)),
 };
 
+// Open Library book details (signed in): request suggestions + admin autofill.
+export const lookup = {
+  // { q } or { isbn } → [{ workKey, title, author, publishedYear, isbn, language, pageCount, coverId, coverUrl }]
+  search: (params) => unwrap(http.get("/lookup/books", { params: cleanParams(params) })),
+  work: (workKey) => unwrap(http.get(`/lookup/books/${workKey}`)), // { description, subjects, coverId }
+  importCover: (coverId) => unwrap(http.post("/lookup/cover", { coverId })), // admin → { public_id, url }
+};
+
 export const categories = {
   list: (params) => unwrap(http.get("/category", { params: cleanParams(params) })),
   mine: (params) => unwrap(http.get("/category/mine", { params: cleanParams(params) })),

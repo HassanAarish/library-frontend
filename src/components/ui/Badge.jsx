@@ -22,7 +22,7 @@ const Badge = ({ children, tone = "neutral", className = "", dot = false }) => {
         TONES[tone] || TONES.neutral
       } ${className}`}
     >
-      {dot && <span className="h-1.5 w-1.5 rounded-full bg-current" />}
+      {dot && <span className="size-1.5 rounded-full bg-current" />}
       {children}
     </span>
   );

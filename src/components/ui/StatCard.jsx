@@ -22,7 +22,7 @@ const StatCard = ({ label, value, icon: Icon, trend, accent = "primary" }) => {
         </div>
         {Icon && (
           <span
-            className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl ${accents[accent]}`}
+            className={`grid size-11 shrink-0 place-items-center rounded-xl ${accents[accent]}`}
           >
             <Icon className="text-xl" />
           </span>

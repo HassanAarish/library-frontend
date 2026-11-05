@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { LuBookOpenCheck, LuCalendarCheck, LuSearch, LuWallet } from "react-icons/lu";
 import { useI18n } from "@/i18n";
 import { BookCover, Button, Container, Input } from "@/ui";
+import { BookGrid } from "@/components/books/BookCard";
+import { useCatalog, useDocumentTitle } from "@/hooks/useBooks";
 
 // Decorative stack for the hero (typeset covers, no real data needed).
 const SHOWCASE = [
@@ -17,7 +19,31 @@ const STEPS = [
   { icon: LuBookOpenCheck, title: "home.step3Title", body: "home.step3Body" },
 ];
 
+/** The latest books, straight from the catalogue (hidden until there are some). */
+const NewArrivals = ({ t }) => {
+  const { data, isLoading } = useCatalog(NEW_ARRIVALS);
+  const books = data?.results ?? [];
+  if (!isLoading && books.length === 0) return null;
+
+  return (
+    <section className="border-b border-line">
+      <Container size="xl" className="py-16">
+        <div className="mb-8 flex items-end justify-between gap-4">
+          <h2 className="text-3xl font-semibold">{t("home.newArrivals")}</h2>
+          <Button variant="link" to="/books">
+            {t("home.seeAll")} →
+          </Button>
+        </div>
+        <BookGrid books={books} loading={isLoading} skeletons={5} />
+      </Container>
+    </section>
+  );
+};
+
+const NEW_ARRIVALS = { sort: "newest", limit: 10 };
+
 const Home = () => {
+  useDocumentTitle();
   const { t } = useI18n();
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
@@ -30,7 +56,7 @@ const Home = () => {
 
   return (
     <>
-      <section className="border-b border-line bg-gradient-to-b from-gold-soft/60 to-canvas">
+      <section className="border-b border-line bg-linear-to-b from-gold-soft/60 to-canvas">
         <Container
           size="xl"
           className="grid items-center gap-12 py-16 md:grid-cols-[1.15fr_1fr] md:py-24"
@@ -76,7 +102,7 @@ const Home = () => {
             {SHOWCASE.map((book, i) => (
               <div
                 key={book.title}
-                className="absolute top-1/2 start-1/2 transition-transform"
+                className="absolute top-1/2 inset-s-1/2 transition-transform"
                 style={{
                   transform: `translate(calc(-50% + ${(i - 1) * 7}rem), -50%) rotate(${(i - 1) * 6}deg)`,
                   zIndex: i === 1 ? 2 : 1,
@@ -93,6 +119,8 @@ const Home = () => {
           </div>
         </Container>
       </section>
+
+      <NewArrivals t={t} />
 
       <section>
         <Container size="xl" className="py-16 md:py-20">

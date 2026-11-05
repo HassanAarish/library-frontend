@@ -68,7 +68,7 @@ const Tray = ({ t, relative, close, unread, onMarkAll, marking }) => {
             <li key={n._id} className={cn("relative px-4 py-3", !n.readAt && "bg-brand-soft/40")}>
               {!n.readAt ? (
                 <span
-                  className="absolute start-1.5 top-4.5 size-1.5 rounded-full bg-brand"
+                  className="absolute inset-s-1.5 top-4.5 size-1.5 rounded-full bg-brand"
                   aria-hidden
                 />
               ) : null}

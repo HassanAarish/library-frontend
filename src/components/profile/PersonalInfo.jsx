@@ -24,7 +24,7 @@ const NotificationToggle = ({ label, hint, checked, onChange }) => (
     >
       <input type="checkbox" className="sr-only" checked={checked} onChange={onChange} />
       <span
-        className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
+        className={`absolute top-0.5 size-5 rounded-full bg-white shadow-sm transition-transform ${
           checked ? "translate-x-5" : "translate-x-0.5"
         }`}
       />
@@ -127,7 +127,7 @@ const PersonalInfo = ({ user, preferences, onUpdated }) => {
           />
 
           <div className="sm:col-span-2">
-            <div className="mb-1.5 ml-1 flex items-center gap-1.5 text-sm font-medium text-gray-300">
+            <div className="mb-1.5 ms-1 flex items-center gap-1.5 text-sm font-medium text-gray-300">
               <LuFileText className="text-base" /> Bio
             </div>
             <Input

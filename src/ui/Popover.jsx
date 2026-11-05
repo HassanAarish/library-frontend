@@ -51,7 +51,7 @@ const Popover = ({ trigger, children, align = "end", className, width = "w-64" }
           id={id}
           className={cn(
             "absolute top-full z-50 mt-2 animate-pop-in rounded-card border border-line bg-surface shadow-pop",
-            align === "end" ? "end-0" : "start-0",
+            align === "end" ? "inset-e-0" : "inset-s-0",
             width,
             className,
           )}

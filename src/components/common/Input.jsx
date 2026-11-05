@@ -22,7 +22,7 @@ const Input = ({
         <input
           id={id}
           type="checkbox"
-          className={`w-4 h-4 rounded border-white/10 bg-white/5 text-primary focus:ring-primary/20 focus:ring-2 focus:ring-offset-0 outline-none transition-all cursor-pointer ${
+          className={`size-4 rounded-sm border-white/10 bg-white/5 text-primary focus:ring-primary/20 focus:ring-2 focus:ring-offset-0 outline-none transition-all cursor-pointer ${
             isError ? "border-red-500/50" : ""
           }`}
           {...props}
@@ -30,10 +30,10 @@ const Input = ({
         {label && (
           <label htmlFor={id} className="text-sm text-gray-300 cursor-pointer select-none">
             {label}
-            {required && <span className="text-red-500 font-bold ml-1">*</span>}
+            {required && <span className="text-red-500 font-bold ms-1">*</span>}
           </label>
         )}
-        {isError && <span className="text-xs text-red-400 ml-auto">{error}</span>}
+        {isError && <span className="text-xs text-red-400 ms-auto">{error}</span>}
       </div>
     );
   }
@@ -68,7 +68,7 @@ const Input = ({
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors z-20 p-1"
+              className="absolute inset-e-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors z-20 p-1"
             >
               {showPassword ? <HiOutlineEyeOff size={20} /> : <HiOutlineEye size={20} />}
             </button>
@@ -98,7 +98,7 @@ const Input = ({
       {label && (
         <label
           htmlFor={id}
-          className="text-sm font-medium text-gray-300 ml-1 flex items-center gap-1"
+          className="text-sm font-medium text-gray-300 ms-1 flex items-center gap-1"
         >
           {label}
           {required && <span className="text-red-500 font-bold">*</span>}
@@ -108,7 +108,7 @@ const Input = ({
       <div className="relative">
         {Icon && (
           <div
-            className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200 z-10
+            className={`absolute inset-s-3 top-1/2 -translate-y-1/2 transition-colors duration-200 z-10
               ${isError ? "text-red-400" : "text-gray-500"}`}
           >
             <Icon size={20} />
@@ -118,11 +118,7 @@ const Input = ({
         {renderInput()}
       </div>
 
-      {isError && (
-        <span className="text-xs text-red-400 ml-1 animate-in fade-in slide-in-from-top-1">
-          {error}
-        </span>
-      )}
+      {isError && <span className="ms-1 text-xs text-red-400">{error}</span>}
     </div>
   );
 };

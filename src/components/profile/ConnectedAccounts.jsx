@@ -23,7 +23,7 @@ const ConnectedAccounts = ({ user }) => {
               key={key}
               className="flex items-center gap-3 rounded-xl border border-white/8 bg-white/4 px-4 py-3"
             >
-              <span className={`grid h-9 w-9 place-items-center rounded-lg bg-white/8 ${brand}`}>
+              <span className={`grid size-9 place-items-center rounded-lg bg-white/8 ${brand}`}>
                 <Icon className="text-lg" />
               </span>
               <span className="flex-1 text-sm font-medium text-ink">{name}</span>

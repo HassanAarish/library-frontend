@@ -4,6 +4,8 @@ import PublicLayout from "@/layout/PublicLayout";
 import AdminLayout from "@/layout/AdminLayout";
 import LegacyScreen from "@/layout/LegacyScreen";
 import Home from "@/pages/Home";
+import Catalog from "@/pages/Catalog";
+import BookDetail from "@/pages/BookDetail";
 import ComingSoon from "@/pages/system/ComingSoon";
 import NotFound from "@/pages/system/NotFound";
 import FullPageLoader from "@/pages/system/FullPageLoader";
@@ -44,8 +46,8 @@ const AppRoutes = () => (
 
       <Route element={<PublicLayout />}>
         <Route index element={<Home />} />
-        <Route path="/books" element={<ComingSoon title="Browse books" phase="F1" />} />
-        <Route path="/books/:bookId" element={<ComingSoon title="Book details" phase="F1" />} />
+        <Route path="/books" element={<Catalog />} />
+        <Route path="/books/:bookId" element={<BookDetail />} />
         <Route path="/requests" element={<ComingSoon title="Book requests" phase="F4" />} />
         <Route path="/plans" element={<ComingSoon title="Reading plans" phase="F3" />} />
         <Route path="/privacy" element={<ComingSoon title="Privacy policy" phase="F6" />} />
@@ -53,6 +55,10 @@ const AppRoutes = () => (
         <Route path="/contact" element={<ComingSoon title="Contact" phase="F6" />} />
 
         <Route element={<RequireAuth />}>
+          <Route
+            path="/books/:bookId/rent"
+            element={<ComingSoon title="Rent this book" phase="F3" />}
+          />
           <Route path="/account" element={<ComingSoon title="My library" phase="F3" />} />
           <Route path="/account/rentals" element={<ComingSoon title="My rentals" phase="F3" />} />
           <Route path="/account/payments" element={<ComingSoon title="My payments" phase="F3" />} />

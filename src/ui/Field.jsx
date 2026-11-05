@@ -74,7 +74,7 @@ export const Input = forwardRef(function Input(
   return (
     <div className="relative">
       {startIcon ? (
-        <span className="pointer-events-none absolute inset-y-0 start-3 flex items-center text-fg-subtle">
+        <span className="pointer-events-none absolute inset-y-0 inset-s-3 flex items-center text-fg-subtle">
           {startIcon}
         </span>
       ) : null}
@@ -92,7 +92,7 @@ export const Input = forwardRef(function Input(
         {...props}
       />
       {endSlot ? (
-        <span className="absolute inset-y-0 end-1 flex items-center">{endSlot}</span>
+        <span className="absolute inset-y-0 inset-e-1 flex items-center">{endSlot}</span>
       ) : null}
     </div>
   );

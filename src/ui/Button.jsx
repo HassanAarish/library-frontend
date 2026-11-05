@@ -112,7 +112,7 @@ export const IconButton = forwardRef(function IconButton(
     >
       <span className="text-[1.15rem]">{icon}</span>
       {badge ? (
-        <span className="absolute -end-0.5 -top-0.5 flex min-w-4.5 items-center justify-center rounded-full bg-danger px-1 text-[0.65rem] leading-4.5 font-semibold text-white">
+        <span className="absolute -inset-e-0.5 -top-0.5 flex min-w-4.5 items-center justify-center rounded-full bg-danger px-1 text-[0.65rem]/4.5 font-semibold text-white">
           {badge}
         </span>
       ) : null}

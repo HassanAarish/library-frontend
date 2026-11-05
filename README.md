@@ -8,11 +8,26 @@ in the browser; the admin runs the catalogue, payments and requests.
 This is the SPA half of a two-part app. The Express/MongoDB API (REST + Socket.IO)
 lives in `../library-backend`; its README documents every endpoint and event.
 
-> **Status:** the frontend is being rebuilt in phases. **F0 (foundation) is done**:
-> design system, API layer, live updates, routing and layouts. Screens arrive in
-> F1 catalogue → F2 accounts → F3 renting & reader → F4 community & inbox →
-> F5 admin → F6 polish. Routes not built yet show a "coming soon" page naming
-> their phase.
+> **Status:** the frontend is being rebuilt in phases. **Done:** F0 (design
+> system, API layer, live updates, routing, layouts) and F1 (catalogue and book
+> page with live availability). **Next:** F2 accounts → F3 renting & reader →
+> F4 community & inbox → F5 admin → F6 polish. Routes not built yet show a
+> "coming soon" page naming their phase.
+
+## 📖 Catalogue (F1)
+
+- **`/books`**: search (title or author), category, language and sort, with
+  pagination. Every filter lives in the URL, so a filtered view can be shared
+  or bookmarked and Back works. Typing is debounced, and the previous results
+  stay visible while the next page loads.
+- **`/books/:bookId`**: cover, details, price per rental and plan-credit note,
+  plus the **live availability panel**: free now, or rented until X, next free
+  date, people ahead, queue length and booked periods. Signed-in readers also
+  see their own booking and place in line. It refreshes the moment anyone
+  books, cancels or returns the book (socket room `book:<id>`).
+- The home page shows **New in the library** from the catalogue.
+- Categories come from the public `GET /category`. Book details for autofill
+  come from `lookup.*` (Open Library via the backend), used in F4/F5.
 
 ---
 
@@ -54,7 +69,20 @@ the accent, and book covers as the main visual.
 - **Gallery**: run `npm run dev` and open **`/dev/design`** to see every
   component in both themes. The page exists only in development builds.
 - **RTL-ready**: layouts use logical utilities (`ms-`/`me-`, `ps-`/`pe-`,
-  `start-`/`end-`, `text-start`), and directional icons flip with `rtl:rotate-180`.
+  `inset-s-`/`inset-e-`, `text-start`), and directional icons flip with
+  `rtl:rotate-180`.
+- **Tailwind lint rules** (`eslint-plugin-better-tailwindcss`, in
+  `eslint.config.js`) make `npm run lint` fail on:
+  - non-canonical classes (e.g. `bg-gradient-to-b` → `bg-linear-to-b`,
+    `w-4 h-4` → `size-4`);
+  - deprecated, unknown, conflicting or duplicate classes, and stray whitespace;
+  - left/right classes that should be logical (`ml-` → `ms-`, `left-` →
+    `inset-s-`, …), so the layout mirrors for Urdu.
+
+  Most of these fix themselves with `npm run lint:fix`, or with ESLint
+  fix-on-save in VS Code (`"editor.codeActionsOnSave": { "source.fixAll.eslint": "explicit" }`).
+  Custom classes must be declared with `@utility` in `index.css` so Tailwind
+  knows them.
 
 ---
 
@@ -116,9 +144,10 @@ every rule itself.
 - `LegacyScreen`: a temporary dark backdrop for the old profile screen.
 
 ### Legacy code (removed in F2)
-The sign-in screens, the profile page, `src/api/` (old client), `src/components/`
-and `src/styles/legacy.css` are the previous "Aurora Glass" UI. They still work
-and are rebuilt in F2. New code must not import them.
+The sign-in screens, the profile page, `src/api/` (old client), the legacy
+parts of `src/components/`, and the **"LEGACY Aurora Glass"** section at the end
+of `src/index.css` are the previous UI. They still work and are rebuilt in F2,
+which deletes that CSS section. New code must not use them.
 
 ---
 
@@ -135,9 +164,10 @@ library-fronend/
 │   ├── routes/        AppRoutes, guards, ScrollToTop
 │   ├── layout/        PublicLayout, AdminLayout, LegacyScreen
 │   ├── components/
-│   │   └── shell/     Logo, SiteHeader, SiteFooter, NotificationBell, UserMenu, ThemeToggle, OfflineBanner
-│   ├── hooks/         useNotifications, useUpload (legacy)
-│   ├── pages/         Home, system/ (404, error, loader, coming soon, /dev/design), Auth/* + Profile (legacy)
+│   │   ├── shell/     Logo, SiteHeader, SiteFooter, NotificationBell, UserMenu, ThemeToggle, OfflineBanner
+│   │   └── books/     BookCard + BookGrid, AvailabilityPanel
+│   ├── hooks/         useBooks (catalogue, book, categories, live availability), useNotifications, useUpload (legacy)
+│   ├── pages/         Home, Catalog, BookDetail, system/ (404, error, loader, coming soon, /dev/design), Auth/* + Profile (legacy)
 │   ├── constants/     API/socket URLs, social client ids
 │   ├── App.jsx        provider tree
 │   └── index.css      design tokens + base styles

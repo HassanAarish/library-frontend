@@ -43,7 +43,7 @@ const Security = ({ isEmailAccount, authType }) => {
       <GlassCard className="animate-rise p-6 sm:p-7">
         <h3 className="font-display text-lg font-semibold text-ink">Security</h3>
         <div className="mt-5 flex flex-col items-center gap-3 rounded-xl border border-white/8 bg-white/4 px-4 py-8 text-center">
-          <span className="bg-aurora-soft grid h-12 w-12 place-items-center rounded-xl text-primary">
+          <span className="bg-aurora-soft grid size-12 place-items-center rounded-xl text-primary">
             <LuShieldCheck className="text-xl" />
           </span>
           <p className="text-sm text-muted">

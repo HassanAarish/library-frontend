@@ -20,7 +20,7 @@ const AuthWrapper = ({ title, subtitle, children }) => {
         {/* Brand panel */}
         <div className="hidden flex-col justify-between p-12 lg:flex">
           <div className="flex items-center gap-2.5">
-            <span className="bg-aurora grid h-10 w-10 place-items-center rounded-xl text-white shadow-lg">
+            <span className="bg-aurora grid size-10 place-items-center rounded-xl text-white shadow-lg">
               <LuBookOpen />
             </span>
             <p className="font-display text-xl font-bold">
@@ -29,7 +29,7 @@ const AuthWrapper = ({ title, subtitle, children }) => {
           </div>
 
           <div className="max-w-md">
-            <h2 className="font-display text-4xl font-bold leading-tight">
+            <h2 className="font-display text-4xl/tight font-bold">
               Your library, <span className="text-gradient">reimagined</span>.
             </h2>
             <p className="mt-4 text-muted">
@@ -40,7 +40,7 @@ const AuthWrapper = ({ title, subtitle, children }) => {
             <ul className="mt-8 space-y-4">
               {FEATURES.map((f) => (
                 <li key={f.text} className="flex items-center gap-3">
-                  <span className="bg-aurora-soft grid h-9 w-9 place-items-center rounded-lg text-primary">
+                  <span className="bg-aurora-soft grid size-9 place-items-center rounded-lg text-primary">
                     <f.icon />
                   </span>
                   <span className="text-sm text-ink/90">{f.text}</span>
@@ -59,7 +59,7 @@ const AuthWrapper = ({ title, subtitle, children }) => {
           <div className="w-full max-w-md">
             {/* Mobile brand */}
             <div className="mb-8 flex items-center justify-center gap-2.5 lg:hidden">
-              <span className="bg-aurora grid h-9 w-9 place-items-center rounded-xl text-white">
+              <span className="bg-aurora grid size-9 place-items-center rounded-xl text-white">
                 <LuBookOpen />
               </span>
               <p className="font-display text-lg font-bold">

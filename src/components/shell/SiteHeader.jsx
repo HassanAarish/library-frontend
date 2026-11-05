@@ -32,7 +32,7 @@ const SiteHeader = () => {
   useEffect(() => setOpen(false), [pathname]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-canvas/85 backdrop-blur-md supports-[backdrop-filter]:bg-canvas/75">
+    <header className="sticky top-0 z-40 border-b border-line bg-canvas/85 backdrop-blur-md supports-backdrop-filter:bg-canvas/75">
       <Container size="xl" className="flex h-16 items-center gap-4">
         <Logo />
 

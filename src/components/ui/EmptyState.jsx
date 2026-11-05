@@ -7,7 +7,7 @@ const EmptyState = ({ icon: Icon, title, description, action }) => {
   return (
     <GlassCard className="flex flex-col items-center justify-center px-6 py-16 text-center animate-rise">
       {Icon && (
-        <span className="mb-5 grid h-16 w-16 place-items-center rounded-2xl bg-aurora-soft text-primary animate-float">
+        <span className="mb-5 grid size-16 place-items-center rounded-2xl bg-aurora-soft text-primary animate-float">
           <Icon className="text-3xl" />
         </span>
       )}
