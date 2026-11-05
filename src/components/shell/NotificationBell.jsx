@@ -1,7 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LuBell } from "react-icons/lu";
+import { useAuth } from "@/context/AuthContext";
 import { useI18n } from "@/i18n";
-import { useMarkAllRead, useNotificationList, useUnreadCount } from "@/hooks/useNotifications";
+import { notificationLink } from "@/lib/notificationLink";
+import {
+  useMarkAllRead,
+  useMarkRead,
+  useNotificationList,
+  useUnreadCount,
+} from "@/hooks/useNotifications";
 import { Button, IconButton, Popover, Skeleton, cn } from "@/ui";
 
 /** Header bell: live unread badge + the latest notifications in a tray. */
@@ -39,6 +46,9 @@ const NotificationBell = () => {
 const Tray = ({ t, relative, close, unread, onMarkAll, marking }) => {
   const { data, isLoading } = useNotificationList({ limit: 6 });
   const items = data?.results ?? [];
+  const markRead = useMarkRead();
+  const navigate = useNavigate();
+  const { isAdmin } = useAuth();
 
   return (
     <div>
@@ -65,16 +75,27 @@ const Tray = ({ t, relative, close, unread, onMarkAll, marking }) => {
           </li>
         ) : (
           items.map((n) => (
-            <li key={n._id} className={cn("relative px-4 py-3", !n.readAt && "bg-brand-soft/40")}>
+            <li key={n._id} className={cn("relative", !n.readAt && "bg-brand-soft/40")}>
               {!n.readAt ? (
                 <span
                   className="absolute inset-s-1.5 top-4.5 size-1.5 rounded-full bg-brand"
                   aria-hidden
                 />
               ) : null}
-              <p className="text-sm font-medium text-fg">{n.title}</p>
-              <p className="mt-0.5 line-clamp-2 text-sm text-fg-muted">{n.message}</p>
-              <p className="mt-1 text-xs text-fg-subtle">{relative(n.createdAt)}</p>
+              <button
+                type="button"
+                onClick={() => {
+                  if (!n.readAt) markRead.mutate([n._id]);
+                  close();
+                  const to = notificationLink(n, { isAdmin });
+                  if (to) navigate(to);
+                }}
+                className="block w-full px-4 py-3 text-start hover:bg-sunken"
+              >
+                <span className="block text-sm font-medium text-fg">{n.title}</span>
+                <span className="mt-0.5 line-clamp-2 block text-sm text-fg-muted">{n.message}</span>
+                <span className="mt-1 block text-xs text-fg-subtle">{relative(n.createdAt)}</span>
+              </button>
             </li>
           ))
         )}

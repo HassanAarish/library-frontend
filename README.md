@@ -11,9 +11,23 @@ lives in `../library-backend`; its README documents every endpoint and event.
 > **Status:** the frontend is being rebuilt in phases. **Done:** F0 (design
 > system, API layer, live updates, routing, layouts), F1 (catalogue and book
 > page with live availability), F2 (sign-in flow, profile, responsive pass,
-> old UI removed) and F3 (renting, Easypaisa payments, plans, library, reader).
-> **Next:** F4 community & inbox → F5 admin → F6 polish. Routes not built yet
-> show a "coming soon" page naming their phase.
+> old UI removed), F3 (renting, Easypaisa payments, plans, library, reader) and
+> F4 (book requests, category suggestions, notifications inbox). **Next:**
+> F5 admin → F6 polish. Routes not built yet show a "coming soon" page naming
+> their phase.
+
+## 🙋 Community & inbox (F4)
+
+| Screen | Route | What it does |
+|--------|-------|--------------|
+| Book requests | `/requests` | Public list of wanted books (search, status, most wanted / newest), "I want this too" to follow, the admin's latest note. **Request a book** opens a form with Open Library suggestions as you type (picking one fills title, author, ISBN, language). If the book is already in the library, it offers the book instead; duplicates join the existing request. Side card: suggest a category |
+| Request | `/requests/:id` | Status, follower count, admin note, a timeline of every status change, and follow, or "Rent it now" once added |
+| My requests | `/account/requests` | Requests I asked for or follow, plus my category suggestions with the admin's note |
+| Notifications | `/account/notifications` | Full inbox (all / unread), click to open the page it's about (`lib/notificationLink.js`), mark read, mark all read, delete. The header bell's items open their page too |
+
+Visitors get "Sign in to …" buttons that bring them back, with the request
+form open when that's what they asked for. On phones the account tabs scroll
+sideways and the current tab is scrolled into view.
 
 ## 📚 Renting & reading (F3)
 

@@ -32,8 +32,11 @@ export const GuestOnly = () => {
 
   if (status === "loading") return <FullPageLoader />;
   if (status === "authenticated") {
-    const from = location.state?.from?.pathname;
-    return <Navigate to={from && from !== "/login" ? from : homeFor(user)} replace />;
+    // Back to where sign-in was asked for, including its ?query (e.g. ?new=1).
+    const from = location.state?.from;
+    const back =
+      from?.pathname && from.pathname !== "/login" ? from.pathname + (from.search ?? "") : null;
+    return <Navigate to={back ?? homeFor(user)} replace />;
   }
   return <Outlet />;
 };
