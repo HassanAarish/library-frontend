@@ -139,6 +139,8 @@ export const notifications = {
 };
 
 export const admin = {
+  // { todo, rentals, catalogue, people, revenue30d }
+  stats: () => unwrap(http.get("/admin/stats")),
   users: (params) => unwrap(http.get("/admin/users", { params: cleanParams(params) })),
   user: (userId) => unwrap(http.get(`/admin/user/${userId}`)),
   toggleBlock: (userId) => unwrapWithMessage(http.patch(`/admin/toggle-user-block/${userId}`)),

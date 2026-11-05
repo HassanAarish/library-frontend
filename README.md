@@ -12,9 +12,29 @@ lives in `../library-backend`; its README documents every endpoint and event.
 > system, API layer, live updates, routing, layouts), F1 (catalogue and book
 > page with live availability), F2 (sign-in flow, profile, responsive pass,
 > old UI removed), F3 (renting, Easypaisa payments, plans, library, reader) and
-> F4 (book requests, category suggestions, notifications inbox). **Next:**
-> F5 admin → F6 polish. Routes not built yet show a "coming soon" page naming
-> their phase.
+> F4 (book requests, category suggestions, notifications inbox) and F5 (admin
+> console). **Next:** F6 polish (legal pages, SEO, accessibility, tests).
+> Routes not built yet show a "coming soon" page naming their phase.
+
+## 🛠️ Admin console (F5)
+
+Admins only (`AdminOnly` guard; anyone else is sent away). Every list uses the
+same `AdminTable` (a table from `md` up, cards on phones), filters and search
+sit above it, and clicking a row opens a side panel (`ui/Drawer`) with the
+details and the actions. Every action toasts the API's message and refreshes
+the admin data (`hooks/useAdmin.js`).
+
+| Screen | Route | What it does |
+|--------|-------|--------------|
+| Dashboard | `/admin` | To-do tiles (payments to review, refunds to send, requests to answer, category suggestions) that link to the filtered list, stats from `GET /admin/stats` (refreshed every minute), the latest payments |
+| Payments | `/admin/payments` | Tabs: to review / refunds / confirmed / rejected / all (`?view=`), search by reference, TID or sender. The panel shows the TID, sender, receipt screenshot, then **Confirm** or **Reject** (with a reason that's sent to the reader), and **Mark as refunded / Decline** for refund requests |
+| Rentals | `/admin/rentals` | Every rental, by status and by how it was paid |
+| Books | `/admin/books`, `/admin/books/new`, `/admin/books/:id` | Catalogue by status (published, drafts, archived) and search. The editor looks the book up on Open Library to fill title, author, ISBN, language, year and description, can import the Open Library cover, uploads the PDF (with progress, page count) and a cover, then publishes or saves a draft; existing books can be unpublished, archived or published again |
+| Book requests | `/admin/requests` | Change status with a note for followers (rejecting needs one), **fulfil** by picking the published book (followers are notified), **merge** a duplicate into another request, see the followers |
+| Categories | `/admin/categories` | Add / edit, approve or reject readers' suggestions (with a note), delete (only when no book uses it) |
+| Packages | `/admin/packages` | Plans (create, edit, switch on/off) and every purchase with its books left |
+| Users | `/admin/users` | Readers and admins, search, and **block** (signs them out at once) or unblock |
+| Activity logs | `/admin/logs` | Audit log of admin and security actions and the request log, with search, date range and severity; a row opens its full details |
 
 ## 🙋 Community & inbox (F4)
 

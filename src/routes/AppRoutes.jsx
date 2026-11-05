@@ -30,7 +30,17 @@ const Requests = lazy(() => import("@/pages/Requests"));
 const RequestDetail = lazy(() => import("@/pages/RequestDetail"));
 const MyRequests = lazy(() => import("@/pages/MyRequests"));
 const Notifications = lazy(() => import("@/pages/Notifications"));
-// Dev-only component gallery; the import is dropped from production builds.
+// Admin console (one chunk per screen).
+const AdminDashboard = lazy(() => import("@/pages/Admin/Dashboard"));
+const AdminPayments = lazy(() => import("@/pages/Admin/Payments"));
+const AdminRentals = lazy(() => import("@/pages/Admin/Rentals"));
+const AdminBooks = lazy(() => import("@/pages/Admin/Books"));
+const AdminBookEditor = lazy(() => import("@/pages/Admin/BookEditor"));
+const AdminRequests = lazy(() => import("@/pages/Admin/Requests"));
+const AdminCategories = lazy(() => import("@/pages/Admin/Categories"));
+const AdminPackages = lazy(() => import("@/pages/Admin/Packages"));
+const AdminUsers = lazy(() => import("@/pages/Admin/Users"));
+const AdminLogs = lazy(() => import("@/pages/Admin/Logs")); // Dev-only component gallery; the import is dropped from production builds.
 const DesignSystem = import.meta.env.DEV ? lazy(() => import("@/pages/system/DesignSystem")) : null;
 
 /**
@@ -89,21 +99,17 @@ const AppRoutes = () => (
 
       <Route path="/admin" element={<RequireAuth role="admin" />}>
         <Route element={<AdminLayout />}>
-          <Route index element={<ComingSoon inConsole title="Dashboard" phase="F5" />} />
-          <Route path="payments" element={<ComingSoon inConsole title="Payments" phase="F5" />} />
-          <Route path="rentals" element={<ComingSoon inConsole title="Rentals" phase="F5" />} />
-          <Route path="books" element={<ComingSoon inConsole title="Books" phase="F5" />} />
-          <Route
-            path="requests"
-            element={<ComingSoon inConsole title="Book requests" phase="F5" />}
-          />
-          <Route
-            path="categories"
-            element={<ComingSoon inConsole title="Categories" phase="F5" />}
-          />
-          <Route path="packages" element={<ComingSoon inConsole title="Packages" phase="F5" />} />
-          <Route path="users" element={<ComingSoon inConsole title="Users" phase="F5" />} />
-          <Route path="logs" element={<ComingSoon inConsole title="Activity logs" phase="F5" />} />
+          <Route index element={<AdminDashboard />} />
+          <Route path="payments" element={<AdminPayments />} />
+          <Route path="rentals" element={<AdminRentals />} />
+          <Route path="books" element={<AdminBooks />} />
+          <Route path="books/new" element={<AdminBookEditor />} />
+          <Route path="books/:bookId" element={<AdminBookEditor />} />
+          <Route path="requests" element={<AdminRequests />} />
+          <Route path="categories" element={<AdminCategories />} />
+          <Route path="packages" element={<AdminPackages />} />
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="logs" element={<AdminLogs />} />
           <Route path="*" element={<Navigate to="/admin" replace />} />
         </Route>
       </Route>

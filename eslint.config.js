@@ -4,6 +4,11 @@ import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import betterTailwind from "eslint-plugin-better-tailwindcss";
 import { defineConfig, globalIgnores } from "eslint/config";
+import process from "node:process";
+
+// The Tailwind rules load the design system in a worker; on a busy machine the
+// first load can take longer than the plugin's 30 s default and crash lint.
+process.env.SYNCKIT_TIMEOUT ??= "180000";
 
 export default defineConfig(globalIgnores(["dist", "dev-dist"]), {
   files: ["**/*.{js,jsx}"],
