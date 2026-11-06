@@ -1,8 +1,37 @@
 {
   "name": "library-frontend",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.0",
+  "description": "LibraryHub website and admin console: an online book-rental library for Pakistan, with live availability, Easypaisa payments and an in-browser reader. Built with React, Vite and Tailwind CSS.",
+  "keywords": [
+    "libraryhub",
+    "book-rental",
+    "ebook-reader",
+    "library",
+    "pakistan",
+    "easypaisa",
+    "react",
+    "vite",
+    "tailwindcss",
+    "pwa"
+  ],
+  "homepage": "https://github.com/HassanAarish/library-frontend#readme",
+  "bugs": {
+    "url": "https://github.com/HassanAarish/library-frontend/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HassanAarish/library-frontend.git"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "author": {
+    "name": "Aarish",
+    "url": "https://github.com/HassanAarish"
+  },
   "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",

@@ -247,7 +247,7 @@ every rule itself.
 ## 📂 Project structure
 
 ```
-library-fronend/
+library-frontend/
 ├── src/
 │   ├── ui/            design system components (import from "@/ui")
 │   ├── lib/           http client, API functions, React Query client + keys
@@ -297,7 +297,7 @@ Placeholder or malformed values fall back safely (current origin, `support@<this
 ## 🚀 Getting started
 
 ```bash
-cd library-fronend
+cd library-frontend
 npm install
 cp .env.example .env
 npm run dev        # http://localhost:5173 (backend on :5001)
@@ -312,3 +312,16 @@ npm run dev        # http://localhost:5173 (backend on :5001)
 | `npm test` / `test:watch` | Vitest unit and component tests |
 | `npm run lint` / `lint:fix` | ESLint |
 | `npm run format` / `format:check` | Prettier write / check |
+
+---
+
+## 📜 License & contributing
+
+LibraryHub is **source-available, not open source**: you may read the code, run
+it locally and send improvements, but not reuse it elsewhere. See
+[`LICENSE`](LICENSE).
+
+Contributions are welcome. Read [`CONTRIBUTING.md`](CONTRIBUTING.md) for how
+to report bugs, make a change and open a pull request, and for the contributor
+terms. Release notes are in [`CHANGELOG.md`](CHANGELOG.md); versions follow
+semantic versioning, starting at **0.1.0**.
