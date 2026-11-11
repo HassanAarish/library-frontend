@@ -33,6 +33,10 @@ export const user = {
   setProfilePicture: (profilePicture) =>
     unwrapWithMessage(http.patch("/user/profile-picture", { profilePicture })),
   removeProfilePicture: () => unwrapWithMessage(http.delete("/user/remove-profile-picture")),
+  // → { canDelete, blockers: { reading, upcoming, unconfirmed, refunds }, credits, graceDays }
+  deletionStatus: () => unwrap(http.get("/user/deletion")),
+  // Body: { confirm: true, password?, giveUpCredits? } → { scheduledFor }
+  requestDeletion: (body) => unwrap(http.post("/user/deletion", body)),
 };
 
 export const files = {

@@ -3,6 +3,7 @@ import AccountPage from "@/components/account/AccountPage";
 import IdentityCard from "./IdentityCard";
 import { NotificationSettings, PersonalInfo } from "./PersonalInfo";
 import { ConnectedAccounts, PasswordSettings, TwoFactorSettings } from "./Security";
+import { DeleteAccountSettings } from "./DeleteAccount";
 
 /** /account/profile: details and preferences on the left, sign-in security on the right. */
 const Profile = () => {
@@ -20,6 +21,7 @@ const Profile = () => {
           <PasswordSettings />
           <TwoFactorSettings />
           <ConnectedAccounts />
+          <DeleteAccountSettings />
         </div>
       </div>
     </AccountPage>

@@ -6,6 +6,7 @@ import { socketURL } from "@/constants";
 import { useAuth } from "@/context/AuthContext";
 import { useI18n } from "@/i18n";
 import { qk } from "@/lib/queryClient";
+import { sessionFlags } from "@/lib/sessionFlags";
 
 /**
  * One Socket.IO connection for the whole app (anonymous for visitors, with
@@ -17,6 +18,7 @@ import { qk } from "@/lib/queryClient";
  *   notification:read  → unread count from another tab
  *   book:availability  → that book's availability (queue, place in line)
  *   account:blocked    → sign out
+ *   account:closed     → sign out (the account was closed for deletion)
  */
 const SocketContext = createContext(null);
 
@@ -88,6 +90,12 @@ export const SocketProvider = ({ children }) => {
 
     s.on("account:blocked", () => {
       toast.error(t("account.blocked"));
+      signOut();
+    });
+
+    s.on("account:closed", () => {
+      if (sessionFlags.closingAccount) return; // deleted in this tab: that dialog signs out
+      toast.info(t("account.closed"));
       signOut();
     });
 

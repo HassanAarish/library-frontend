@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { FaFacebookF } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -18,7 +18,22 @@ const PROVIDER_NAMES = { google: "Google", facebook: "Facebook" };
  * backend's three answers: a token (signed in), 2FA required (go to the code
  * step), or "an account with this email exists" (ask before linking).
  */
+/** Width of an element in whole pixels, kept up to date (null until measured). */
+const useBoxWidth = () => {
+  const ref = useRef(null);
+  const [width, setWidth] = useState(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return undefined;
+    const observer = new ResizeObserver(([entry]) => setWidth(Math.floor(entry.contentRect.width)));
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+  return [ref, width];
+};
+
 const SocialButtons = () => {
+  const [googleBox, googleWidth] = useBoxWidth();
   const { t } = useI18n();
   const { signIn } = useAuth();
   const { resolvedTheme } = useTheme();
@@ -43,7 +58,13 @@ const SocialButtons = () => {
       }
       if (raw.token) {
         const user = await signIn(raw.token);
-        if (user) toast.success(t("auth.welcome", { name: user.name?.split(" ")[0] ?? "" }));
+        if (user) {
+          toast.success(
+            raw.deletionCancelled
+              ? t("account.deletionKept")
+              : t("auth.welcome", { name: user.name?.split(" ")[0] ?? "" }),
+          );
+        }
       }
     } catch (err) {
       toast.error(err?.message || t("auth.socialFailed"));
@@ -70,16 +91,20 @@ const SocialButtons = () => {
       <Divider label={t("auth.orContinueWith")} />
       <div className="mt-6 flex flex-col items-stretch gap-3">
         {GOOGLE_CLIENT_ID ? (
-          <div className="flex justify-center [&>div]:inline-full">
-            <GoogleLogin
-              onSuccess={(cred) => authenticate("google", cred.credential)}
-              onError={() => toast.error(t("auth.socialFailed"))}
-              theme={resolvedTheme === "dark" ? "filled_black" : "outline"}
-              shape="rectangular"
-              text="continue_with"
-              size="large"
-              width="400"
-            />
+          <div ref={googleBox} className="flex w-full justify-center [&>div]:inline-full">
+            {googleWidth ? (
+              <GoogleLogin
+                key={googleWidth}
+                onSuccess={(cred) => authenticate("google", cred.credential)}
+                onError={() => toast.error(t("auth.socialFailed"))}
+                theme={resolvedTheme === "dark" ? "filled_black" : "outline"}
+                shape="rectangular"
+                text="continue_with"
+                size="large"
+                // Google allows 200-400px.
+                width={String(Math.max(200, Math.min(400, googleWidth)))}
+              />
+            ) : null}
           </div>
         ) : null}
         {FACEBOOK_APP_ID ? (

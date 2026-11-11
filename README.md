@@ -87,13 +87,17 @@ hit.
 | Verify email | `/verify-otp` | 6-digit code, with a 60 s cooldown on "send a new code" |
 | Forgot / reset password | `/forgot-password`, `/reset-password/:token` | The reset link comes from the email |
 | Two-step code | `/two-factor` | Only reachable right after the first step |
-| Profile & settings | `/account/profile` | Photo, personal details, notification switches, password change, 2FA on/off with a QR code, connected Google/Facebook accounts |
+| Profile & settings | `/account/profile` | Photo, personal details, notification switches, password change, 2FA on/off with a QR code, connected Google/Facebook accounts, delete account |
+| Delete your account | `/delete-account` | Public help page: how to delete in the app or here, what's deleted and kept. This is the link for Google Play's account-deletion question |
 
 - After signing in, people return to the page they came from (e.g. a book's
   "Sign in to rent"), otherwise to `/account` (readers) or `/admin` (admin).
 - If Google and Facebook both share an email with an existing account, the
   app asks before linking them.
 - Changing the password signs you out everywhere, including the current tab.
+- Deleting the account (profile › Delete account) shows what still stops it, asks for
+  the password and for giving up unused credits, then signs out and goes home. Signing
+  in within 14 days keeps the account ("Welcome back! Your account will not be deleted.").
 - The Google button only renders on origins listed in the Google OAuth client
   (e.g. `http://localhost:5173`).
 
@@ -284,7 +288,17 @@ VITE_FACEBOOK_APP_ID=<facebook app id>
 VITE_SITE_URL=https://<your-domain>       # canonical links + link-preview image
 VITE_SUPPORT_EMAIL=<support email>         # /contact and the legal pages
 VITE_SUPPORT_WHATSAPP=                     # e.g. 923001234567 (03xx works too); empty hides it
+# Build-time only (not sent to the browser): Android App Links
+ANDROID_CERT_FINGERPRINTS=                 # the app's SHA-256 signing fingerprints, comma-separated
+# ANDROID_PACKAGE=pk.libraryhub.app
 ```
+
+**Android App Links.** With `ANDROID_CERT_FINGERPRINTS` set, the build writes
+`/.well-known/assetlinks.json`, which lets the Android app open website links
+(books, requests, the reader, account pages). Get the fingerprints from
+`eas credentials` (Android) and, once the app is on Google Play, Play Console ›
+Test and release › App integrity › App signing; list both. They're public by design.
+The host must serve the file as `application/json` over https, not the app page.
 
 Placeholder or malformed values fall back safely (current origin, `support@<this domain>`).
 

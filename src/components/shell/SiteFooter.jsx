@@ -34,6 +34,9 @@ const SiteFooter = () => {
           <Link to="/contact" className="text-fg-muted hover:text-fg">
             {t("footer.contact")}
           </Link>
+          <Link to="/delete-account" className="text-fg-muted hover:text-fg">
+            {t("footer.deleteAccount")}
+          </Link>
         </nav>
       </Container>
       <Container size="xl" className="border-t border-line py-5 text-xs text-fg-subtle">

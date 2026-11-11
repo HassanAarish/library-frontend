@@ -24,7 +24,13 @@ const TwoFactorVerify = () => {
     mutationFn: ({ code }) => twoFactor.verify({ pendingToken, code }),
     onSuccess: async ({ raw }) => {
       const user = await signIn(raw.token);
-      if (user) toast.success(t("auth.welcome", { name: user.name?.split(" ")[0] ?? "" }));
+      if (user) {
+        toast.success(
+          raw.deletionCancelled
+            ? t("account.deletionKept")
+            : t("auth.welcome", { name: user.name?.split(" ")[0] ?? "" }),
+        );
+      }
     },
     onError: (err) => toast.error(err.message),
   });

@@ -107,7 +107,7 @@ const privacy = {
           list: [
             "See and correct your details on your profile page.",
             "Turn optional emails off in your profile.",
-            "Ask us for a copy of your data, or to delete your account, by writing to {email}. We may keep payment and security records the law or fraud prevention requires.",
+            "Delete your account yourself in the app or on the website (see “Delete your account”), or ask us to by writing to {email}. Ask us for a copy of your data the same way. We may keep payment and security records the law or fraud prevention requires.",
           ],
         },
       ],
@@ -272,4 +272,50 @@ const contact = {
   ],
 };
 
-export default { privacy, terms, contact };
+/** Public page for deleting an account (Google Play asks for this link). */
+const deleteAccount = {
+  title: "Delete your account",
+  description: "How to delete your LibraryHub account, and what's deleted and what's kept.",
+  intro:
+    "You can delete your LibraryHub account yourself, in the app or on the website. It closes straight away and is deleted for good 14 days later.",
+  howTitle: "How to delete it",
+  inApp: {
+    title: "In the LibraryHub app",
+    steps: [
+      "Open the Account tab.",
+      "Tap “Delete account” at the bottom.",
+      "Confirm. If you sign in with a password, you'll be asked for it.",
+    ],
+  },
+  onWeb: {
+    title: "On the website",
+    steps: [
+      "Sign in and open Account, then Profile & settings.",
+      "Under “Delete account”, choose “Delete my account”.",
+      "Confirm. If you sign in with a password, you'll be asked for it.",
+    ],
+  },
+  openProfile: "Open my profile",
+  byEmail:
+    "Can't sign in any more? Email {email} from the address on your account and we'll delete it for you.",
+  beforeTitle: "Before you can delete it",
+  before: [
+    "No book is being read or booked, and no payment or refund is in progress. Cancel or finish them first.",
+    "Unused plan credits are given up. They aren't refunded.",
+  ],
+  deletedTitle: "What's deleted",
+  deleted: [
+    "Your name, email address and password, and links to Google or Facebook sign-in.",
+    "Your profile, settings, notifications and the phones that get your notifications.",
+  ],
+  keptTitle: "What's kept",
+  kept: [
+    "Payment and booking records, without your name, for as long as the law and fraud prevention require.",
+    "Security logs, for a limited time.",
+    "Your reviews and book requests, shown as “Former reader”.",
+  ],
+  changeTitle: "Changed your mind?",
+  change: "Sign in again within 14 days and your account stays exactly as it was.",
+};
+
+export default { privacy, terms, contact, deleteAccount };

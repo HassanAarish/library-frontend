@@ -34,9 +34,55 @@ const seoFiles = (env) => {
   };
 };
 
+/**
+ * Writes /.well-known/assetlinks.json so Android opens website links in the
+ * LibraryHub app (Android App Links). ANDROID_CERT_FINGERPRINTS lists the
+ * app's SHA-256 signing-certificate fingerprints, comma-separated (from
+ * `eas credentials` and Play Console › App signing); they're public by
+ * design. Without them no file is written and links simply open the website.
+ */
+const androidAppLinks = (env) => {
+  const fingerprints = (env.ANDROID_CERT_FINGERPRINTS ?? "")
+    .split(",")
+    .map((f) => f.trim().toUpperCase())
+    .filter((f) => /^([0-9A-F]{2}:){31}[0-9A-F]{2}$/.test(f));
+  const json = JSON.stringify(
+    [
+      {
+        relation: ["delegate_permission/common.handle_all_urls"],
+        target: {
+          namespace: "android_app",
+          package_name: env.ANDROID_PACKAGE || "pk.libraryhub.app",
+          sha256_cert_fingerprints: fingerprints,
+        },
+      },
+    ],
+    null,
+    2,
+  );
+  return {
+    name: "libraryhub-android-app-links",
+    configureServer(server) {
+      server.middlewares.use("/.well-known/assetlinks.json", (req, res) => {
+        res.setHeader("Content-Type", "application/json");
+        res.end(json);
+      });
+    },
+    generateBundle() {
+      if (!fingerprints.length) return;
+      this.emitFile({
+        type: "asset",
+        fileName: ".well-known/assetlinks.json",
+        source: `${json}\n`,
+      });
+    },
+  };
+};
+
 export default defineConfig(({ mode }) => ({
   plugins: [
     seoFiles(loadEnv(mode, process.cwd(), "VITE_")),
+    androidAppLinks(loadEnv(mode, process.cwd(), "ANDROID_")),
     react(),
     tailwindcss(),
     VitePWA({
@@ -44,7 +90,8 @@ export default defineConfig(({ mode }) => ({
       workbox: {
         maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
         // Never cache API calls or book pages offline.
-        navigateFallbackDenylist: [/^\/api/],
+        // …and never answer /.well-known (Android App Links) with the app page.
+        navigateFallbackDenylist: [/^\/api/, /^\/\.well-known\//],
       },
       manifest: {
         name: "LibraryHub",

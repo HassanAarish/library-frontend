@@ -6,6 +6,19 @@ follow [semantic versioning](https://semver.org) (see CONTRIBUTING.md › Versio
 
 ## [Unreleased]
 
+### Added
+- Android App Links: the build writes `/.well-known/assetlinks.json` from
+  `ANDROID_CERT_FINGERPRINTS`, so website links open the app; the offline service
+  worker never answers `/.well-known` with the app page.
+- Delete account: a section on the profile page (what still stops it, unused credits,
+  password) and a public `/delete-account` help page, linked from the footer and the
+  privacy policy. Signing in again within 14 days shows that the account is kept.
+
+### Fixed
+- Sign-in pages no longer scroll sideways on 360px phones (the Google button now fits
+  its box).
+- A wrong current password when changing it no longer signs you out.
+
 ## [0.1.0] - not yet released
 
 The first version of the rebuilt website.

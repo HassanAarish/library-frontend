@@ -31,7 +31,13 @@ const Login = () => {
       }
       const user = await signIn(raw.token);
       // GuestOnly then sends them back where they came from (or their home).
-      if (user) toast.success(t("auth.welcome", { name: user.name?.split(" ")[0] ?? "" }));
+      if (user) {
+        toast.success(
+          raw.deletionCancelled
+            ? t("account.deletionKept")
+            : t("auth.welcome", { name: user.name?.split(" ")[0] ?? "" }),
+        );
+      }
     },
     onError: (err, values) => {
       // An unverified account: go to the code step instead of a dead end.

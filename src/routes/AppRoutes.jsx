@@ -22,6 +22,7 @@ const Profile = lazy(() => import("@/pages/Profile"));
 const Plans = lazy(() => import("@/pages/Plans"));
 const LegalPage = lazy(() => import("@/pages/Legal/LegalPage"));
 const Contact = lazy(() => import("@/pages/Legal/Contact"));
+const DeleteAccountHelp = lazy(() => import("@/pages/Legal/DeleteAccount"));
 const RentBook = lazy(() => import("@/pages/Rent"));
 const Library = lazy(() => import("@/pages/Library"));
 const Payments = lazy(() => import("@/pages/Payments"));
@@ -77,6 +78,7 @@ const AppRoutes = () => (
         <Route path="/privacy" element={<LegalPage key="privacy" name="privacy" />} />
         <Route path="/terms" element={<LegalPage key="terms" name="terms" />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/delete-account" element={<DeleteAccountHelp />} />
 
         <Route element={<RequireAuth />}>
           <Route path="/books/:bookId/rent" element={<RentBook />} />

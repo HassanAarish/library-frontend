@@ -1,5 +1,6 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import { sessionFlags } from "@/lib/sessionFlags";
 import FullPageLoader from "@/pages/system/FullPageLoader";
 
 /**
@@ -19,6 +20,8 @@ export const RequireAuth = ({ role }) => {
 
   if (status === "loading") return <FullPageLoader />;
   if (status !== "authenticated") {
+    // Just deleted their account here: go home, not to sign-in.
+    if (sessionFlags.closingAccount) return <Navigate to="/" replace />;
     // Come back here after signing in.
     return <Navigate to="/login" replace state={{ from: location }} />;
   }

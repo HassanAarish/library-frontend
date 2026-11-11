@@ -204,6 +204,35 @@ const en = {
     connectedDescription: "Ways you can sign in to LibraryHub.",
     connected: "Connected",
     notConnected: "Not connected",
+
+    deleteTitle: "Delete account",
+    deleteDescription:
+      "Close your account and delete it for good after {days} days. Signing in before then keeps it.",
+    deleteCta: "Delete my account…",
+    deleteHelp: "What's deleted and what's kept",
+    deleteModalTitle: "Delete your account?",
+    deleteIntro:
+      "Your account closes straight away and you're signed out everywhere. It's deleted for good on {date}. Sign in before then to keep it.",
+    deleteKept:
+      "Your reviews and book requests stay, shown as “Former reader”. Payment records are kept without your name, as the law requires.",
+    deleteBlockedTitle: "Finish these first",
+    deleteBlockedBody: "You can delete your account once nothing is still running.",
+    deleteReading: { one: "You're reading 1 book", other: "You're reading {count} books" },
+    deleteUpcoming: { one: "1 upcoming booking", other: "{count} upcoming bookings" },
+    deleteUnconfirmed: {
+      one: "1 payment waiting to be confirmed",
+      other: "{count} payments waiting to be confirmed",
+    },
+    deleteRefunds: { one: "1 refund in progress", other: "{count} refunds in progress" },
+    deleteGoLibrary: "Go to my library",
+    deleteGoPayments: "See my payments",
+    deleteCredits: {
+      one: "I'm giving up my 1 unused book credit (no refund)",
+      other: "I'm giving up my {count} unused book credits (no refund)",
+    },
+    deletePassword: "Your password",
+    deleteSubmit: "Delete my account",
+    deleteDone: "Your account is closed and will be deleted on {date}.",
   },
 
   rent: {
@@ -856,6 +885,8 @@ const en = {
   },
 
   account: {
+    deletionKept: "Welcome back! Your account will not be deleted.",
+    closed: "This account was closed. Sign in again to keep it.",
     blocked: "Your account has been suspended. Please contact support.",
     sessionExpired: "Your session has expired. Please sign in again.",
   },
@@ -874,6 +905,7 @@ const en = {
     privacy: "Privacy policy",
     terms: "Terms",
     contact: "Contact",
+    deleteAccount: "Delete account",
   },
 };
 

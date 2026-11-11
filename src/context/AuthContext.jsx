@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { useQueryClient } from "@tanstack/react-query";
 import { user as userApi } from "@/lib/api";
 import { getToken, setUnauthorizedHandler } from "@/lib/http";
+import { sessionFlags } from "@/lib/sessionFlags";
 import { TOKEN_KEY } from "@/constants";
 
 /**
@@ -53,6 +54,7 @@ export const AuthProvider = ({ children }) => {
   /** Call with the token from login / social login / 2FA. Resolves to the user. */
   const signIn = useCallback(
     (token) => {
+      sessionFlags.closingAccount = false;
       storeToken(token);
       setState((prev) => ({ ...prev, status: "loading", token }));
       return loadProfile(token);
