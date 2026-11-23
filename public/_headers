@@ -1,0 +1,12 @@
+# Cloudflare Pages response headers (copied into dist/ by Vite; not served).
+# https://developers.cloudflare.com/pages/configuration/headers/
+
+# Android App Links: Google checks this file, so it must be plain JSON.
+/.well-known/assetlinks.json
+  Content-Type: application/json
+  Access-Control-Allow-Origin: *
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY

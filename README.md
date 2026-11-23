@@ -329,6 +329,20 @@ npm run dev        # http://localhost:5173 (backend on :5001)
 
 ---
 
+## ☁️ Deploying
+
+Production runs on **Cloudflare Pages**:
+
+- Build command `npm run build`, output directory `dist`. Node 22 comes from
+  `.node-version`.
+- No redirect file is needed: without a `404.html`, Pages serves the app for every
+  route. `public/_headers` makes `/.well-known/assetlinks.json` plain JSON and adds
+  basic security headers.
+- Set the `VITE_*` variables (and later `ANDROID_CERT_FINGERPRINTS`) in the Pages
+  project's settings; `VITE_API_URL` is the API's address (e.g. `https://api.<domain>`).
+- Add the site's address to the Google OAuth client and the Facebook app, and to the
+  API's `CORS_ORIGINS` and `CLIENT_URL`.
+
 ## 📜 License & contributing
 
 LibraryHub is **source-available, not open source**: you may read the code, run

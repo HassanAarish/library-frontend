@@ -7,6 +7,8 @@ follow [semantic versioning](https://semver.org) (see CONTRIBUTING.md › Versio
 ## [Unreleased]
 
 ### Added
+- Deploying to Cloudflare Pages: `.node-version` and `public/_headers` (README ›
+  Deploying).
 - Android App Links: the build writes `/.well-known/assetlinks.json` from
   `ANDROID_CERT_FINGERPRINTS`, so website links open the app; the offline service
   worker never answers `/.well-known` with the app page.
