@@ -2,37 +2,80 @@
   "name": "library-frontend",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+  "description": "LibraryHub website and admin console: an online book-rental library for Pakistan, with live availability, Easypaisa payments and an in-browser reader. Built with React, Vite and Tailwind CSS.",
+  "keywords": [
+    "libraryhub",
+    "book-rental",
+    "ebook-reader",
+    "library",
+    "pakistan",
+    "easypaisa",
+    "react",
+    "vite",
+    "tailwindcss",
+    "pwa"
+  ],
+  "homepage": "https://github.com/HassanAarish/library-frontend#readme",
+  "bugs": {
+    "url": "https://github.com/HassanAarish/library-frontend/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HassanAarish/library-frontend.git"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "author": {
+    "name": "Aarish",
+    "url": "https://github.com/HassanAarish"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format:check": "prettier --check .",
+    "format": "prettier --write .",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+  "dependencies": {
+    "@react-oauth/google": "^0.13.5",
+    "@tailwindcss/vite": "^4.3.3",
+    "@tanstack/react-query": "^5.105.0",
+    "axios": "^1.21.0",
+    "formik": "^2.4.9",
+    "moment": "^2.31.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-icons": "^5.7.0",
+    "react-router-dom": "^7.18.5",
+    "react-toastify": "^11.1.0",
+    "socket.io-client": "^4.8.4",
+    "tailwindcss": "^4.3.3",
+    "yup": "^1.7.1"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "eslint": "^10.13.0",
+    "eslint-plugin-better-tailwindcss": "^4.10.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.7",
+    "globals": "^17.13.0",
+    "jsdom": "^29.1.1",
+    "prettier": "^3.9.10",
+    "vite": "^8.3.5",
+    "vite-plugin-pwa": "^2.0.0",
+    "vitest": "^4.1.12"
   }
 }
