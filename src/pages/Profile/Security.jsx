@@ -23,6 +23,8 @@ import {
   cn,
 } from "@/ui";
 import { fieldError, rules } from "@/pages/Auth/forms";
+import { CopyValue } from "@/components/account/bits";
+import { groupKey, secretFromOtpauth } from "@/lib/otpauth";
 
 /** Change password (email accounts). Success signs out everywhere, including here. */
 export const PasswordSettings = () => {
@@ -123,6 +125,7 @@ export const TwoFactorSettings = () => {
   }
 
   const validCode = /^\d{6}$/.test(code);
+  const setupKey = secretFromOtpauth(setup.data?.otpauthUrl);
 
   return (
     <Card as="section">
@@ -184,13 +187,25 @@ export const TwoFactorSettings = () => {
                 {setup.data?.qrCode ? (
                   <img
                     src={setup.data.qrCode}
-                    alt="QR code for your authenticator app"
+                    alt={t("profile.setupQrAlt")}
                     className="size-44 rounded-lg border border-line bg-white p-2"
                   />
                 ) : (
                   <Skeleton className="size-44" />
                 )}
               </div>
+              {setupKey ? (
+                <div className="mt-3 space-y-2">
+                  <p>{t("profile.setupKeyHint")}</p>
+                  <CopyValue
+                    label={t("profile.setupKeyLabel")}
+                    value={groupKey(setupKey)}
+                    copyValue={setupKey}
+                    mono
+                    wrap
+                  />
+                </div>
+              ) : null}
             </li>
             <li>2. {t("profile.setupStep2")}</li>
           </ol>

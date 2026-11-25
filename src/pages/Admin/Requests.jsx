@@ -264,6 +264,7 @@ const Requests = () => {
             ["reviewing", t("admin.req.reviewing")],
             ["planned", t("admin.req.planned")],
             ["fulfilled", t("admin.req.fulfilled")],
+            ["rejected", t("admin.req.rejected")],
             ["", t("admin.common.all")],
           ]}
         />

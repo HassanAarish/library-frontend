@@ -167,7 +167,9 @@ const Categories = () => {
             key: "name",
             header: t("admin.cat.name"),
             primary: true,
-            cell: (c) => <Cell title={c.name} sub={c.description} />,
+            cell: (c) => (
+              <Cell title={c.name} sub={c.description} className="max-w-xs lg:max-w-md" />
+            ),
           },
           { key: "books", header: t("admin.cat.books"), cell: (c) => c.bookCount ?? 0 },
           { key: "by", header: t("admin.cat.suggestedBy"), cell: (c) => c.proposedBy?.name ?? "—" },

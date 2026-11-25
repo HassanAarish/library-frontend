@@ -6,6 +6,15 @@ follow [semantic versioning](https://semver.org) (see CONTRIBUTING.md › Versio
 
 ## [Unreleased]
 
+### Fixed
+- Admin dashboard: “1 book in the catalogue” (was “1 books”).
+- Admin book requests: a “Not adding” filter, so declined requests can be found.
+- Admin categories: long descriptions are cut off instead of widening the table.
+- Two-step setup shows the key to type in when the QR code can't be scanned, and
+  the QR code's description is translatable.
+- The password card now says changing it signs you out everywhere, including here
+  (which is what happens).
+
 ### Security
 - `package-lock.json` is now committed, so every install (and Cloudflare Pages)
   gets the tested versions. `npm audit` is clean: `vite-plugin-pwa`'s `glob`
