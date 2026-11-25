@@ -6,6 +6,11 @@ follow [semantic versioning](https://semver.org) (see CONTRIBUTING.md › Versio
 
 ## [Unreleased]
 
+### Security
+- `package-lock.json` is now committed, so every install (and Cloudflare Pages)
+  gets the tested versions. `npm audit` is clean: `vite-plugin-pwa`'s `glob`
+  (through `workbox-build`) is pinned to the fixed 14.x.
+
 ### Added
 - Deploying to Cloudflare Pages: `.node-version` and `public/_headers` (README ›
   Deploying).
