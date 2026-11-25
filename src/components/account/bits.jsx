@@ -3,14 +3,18 @@ import { LuCheck, LuCopy } from "react-icons/lu";
 import { useI18n } from "@/i18n";
 import { cn } from "@/ui";
 
-/** A value the user needs to type elsewhere (account number, reference), with a copy button. */
-export const CopyValue = ({ label, value, mono, className }) => {
+/**
+ * A value the user needs to type elsewhere (account number, reference), with a copy button.
+ * `wrap` lets a long value (a setup key) break across lines instead of being cut off;
+ * `copyValue` is copied instead of the shown value (e.g. a key shown with spaces).
+ */
+export const CopyValue = ({ label, value, copyValue, mono, wrap, className }) => {
   const { t } = useI18n();
   const [copied, setCopied] = useState(false);
 
   const copy = async () => {
     try {
-      await navigator.clipboard.writeText(String(value));
+      await navigator.clipboard.writeText(String(copyValue ?? value));
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch {
@@ -29,7 +33,8 @@ export const CopyValue = ({ label, value, mono, className }) => {
         <p className="text-xs text-fg-subtle">{label}</p>
         <p
           className={cn(
-            "truncate text-base font-semibold text-fg",
+            "text-base font-semibold text-fg",
+            wrap ? "break-all" : "truncate",
             mono && "font-mono tracking-wide",
           )}
         >

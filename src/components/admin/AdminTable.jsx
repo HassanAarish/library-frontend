@@ -127,9 +127,9 @@ export const AdminFilters = ({ children, className }) => (
   </div>
 );
 
-/** Two-line cell: bold primary + muted secondary. */
-export const Cell = ({ title, sub }) => (
-  <div className="min-w-0">
+/** Two-line cell: bold primary + muted secondary. Pass a max width (className) to cut long text. */
+export const Cell = ({ title, sub, className }) => (
+  <div className={cn("min-w-0", className)}>
     <p className="truncate font-medium text-fg">{title}</p>
     {sub ? <p className="truncate text-xs text-fg-subtle">{sub}</p> : null}
   </div>

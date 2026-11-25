@@ -160,7 +160,10 @@ const Dashboard = () => {
                   icon={LuUsers}
                   label={t("admin.dash.readers")}
                   value={number(s.people.readers)}
-                  sub={`${number(s.catalogue.publishedBooks)} ${t("admin.dash.publishedBooks").toLowerCase()}`}
+                  sub={t("admin.dash.publishedBooks", {
+                    count: s.catalogue.publishedBooks,
+                    n: number(s.catalogue.publishedBooks),
+                  })}
                 />
                 <Stat
                   icon={LuTicket}
